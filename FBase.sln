@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FBase.DotNetCore.EntityFram
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FBase.DotNet.EntityFramework", "FBase.DotNet.EntityFramework\FBase.DotNet.EntityFramework.csproj", "{BC0E0C78-43E9-4637-B44A-EB390D3B6450}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyStuff", "MyStuff\MyStuff.csproj", "{465F6025-7587-4434-A93F-3A6951B07D0D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{BC0E0C78-43E9-4637-B44A-EB390D3B6450}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC0E0C78-43E9-4637-B44A-EB390D3B6450}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC0E0C78-43E9-4637-B44A-EB390D3B6450}.Release|Any CPU.Build.0 = Release|Any CPU
+		{465F6025-7587-4434-A93F-3A6951B07D0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{465F6025-7587-4434-A93F-3A6951B07D0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{465F6025-7587-4434-A93F-3A6951B07D0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{465F6025-7587-4434-A93F-3A6951B07D0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{2F4702B6-8357-4612-B695-CE2F2F451120} = {D8AC5291-AAE6-4C1E-BB4E-B145E4EE3BF6}
 		{50318DD9-A2D5-4DD5-A4FA-E41B67589F4C} = {D8AC5291-AAE6-4C1E-BB4E-B145E4EE3BF6}
+		{465F6025-7587-4434-A93F-3A6951B07D0D} = {D8AC5291-AAE6-4C1E-BB4E-B145E4EE3BF6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50A5632E-0616-4CA4-B647-143D543E3F7C}

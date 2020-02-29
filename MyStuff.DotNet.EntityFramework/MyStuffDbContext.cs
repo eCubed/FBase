@@ -6,7 +6,7 @@ namespace MyStuff.DotNet.EntityFramework
     {
         public DbSet<MyThing> MyThings { get; set; }
 
-        public MyStuffDbContext() : base()
+        public MyStuffDbContext() : base("MyStuffConnectionString")
         {
         }
 

@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Description>Contains the EntityStoreBase for easier implementation of entity stores. This is a part of the FBase system that makes development easier. This is a dependency for .net Core libraries and applications.</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

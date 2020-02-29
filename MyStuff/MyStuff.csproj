@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FBase.Foundations\FBase.Foundations.csproj" />
+    <PackageReference Include="FBase.Foundations" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

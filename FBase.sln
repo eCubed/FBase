@@ -11,11 +11,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FBaseTest.Net45x", "FBaseTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FBaseTest.NetCore", "FBaseTest.NetCore\FBaseTest.NetCore.csproj", "{50318DD9-A2D5-4DD5-A4FA-E41B67589F4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FBase.DotNetCore.EntityFramework", "FBase.DotNetCore.EntityFramework\FBase.DotNetCore.EntityFramework.csproj", "{2BAA5CA4-F9AA-4C6B-A9E0-093944FBA321}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FBase.DotNetCore.EntityFramework", "FBase.DotNetCore.EntityFramework\FBase.DotNetCore.EntityFramework.csproj", "{2BAA5CA4-F9AA-4C6B-A9E0-093944FBA321}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FBase.DotNet.EntityFramework", "FBase.DotNet.EntityFramework\FBase.DotNet.EntityFramework.csproj", "{BC0E0C78-43E9-4637-B44A-EB390D3B6450}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyStuff", "MyStuff\MyStuff.csproj", "{465F6025-7587-4434-A93F-3A6951B07D0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyStuff", "MyStuff\MyStuff.csproj", "{465F6025-7587-4434-A93F-3A6951B07D0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyStuff.DotNetCore.EntityFramework", "MyStuff.DotNetCore.EntityFramework\MyStuff.DotNetCore.EntityFramework.csproj", "{252F9722-8B58-4814-9790-34BB72D6AA47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyStuff.DotNetCore.DevDeploy", "MyStuff.DotNetCore.DevDeploy\MyStuff.DotNetCore.DevDeploy.csproj", "{0CEB7C9D-DF48-4DF1-BD91-C9E4BCA1B399}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyStuff.DotNetCore.Server", "MyStuff.DotNetCore.Server\MyStuff.DotNetCore.Server.csproj", "{B790468E-1BDD-43B5-B5DC-6A5AD054F1C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +53,18 @@ Global
 		{465F6025-7587-4434-A93F-3A6951B07D0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{465F6025-7587-4434-A93F-3A6951B07D0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{465F6025-7587-4434-A93F-3A6951B07D0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{252F9722-8B58-4814-9790-34BB72D6AA47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{252F9722-8B58-4814-9790-34BB72D6AA47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{252F9722-8B58-4814-9790-34BB72D6AA47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{252F9722-8B58-4814-9790-34BB72D6AA47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CEB7C9D-DF48-4DF1-BD91-C9E4BCA1B399}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CEB7C9D-DF48-4DF1-BD91-C9E4BCA1B399}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CEB7C9D-DF48-4DF1-BD91-C9E4BCA1B399}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CEB7C9D-DF48-4DF1-BD91-C9E4BCA1B399}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B790468E-1BDD-43B5-B5DC-6A5AD054F1C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B790468E-1BDD-43B5-B5DC-6A5AD054F1C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B790468E-1BDD-43B5-B5DC-6A5AD054F1C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B790468E-1BDD-43B5-B5DC-6A5AD054F1C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +73,9 @@ Global
 		{2F4702B6-8357-4612-B695-CE2F2F451120} = {D8AC5291-AAE6-4C1E-BB4E-B145E4EE3BF6}
 		{50318DD9-A2D5-4DD5-A4FA-E41B67589F4C} = {D8AC5291-AAE6-4C1E-BB4E-B145E4EE3BF6}
 		{465F6025-7587-4434-A93F-3A6951B07D0D} = {D8AC5291-AAE6-4C1E-BB4E-B145E4EE3BF6}
+		{252F9722-8B58-4814-9790-34BB72D6AA47} = {D8AC5291-AAE6-4C1E-BB4E-B145E4EE3BF6}
+		{0CEB7C9D-DF48-4DF1-BD91-C9E4BCA1B399} = {D8AC5291-AAE6-4C1E-BB4E-B145E4EE3BF6}
+		{B790468E-1BDD-43B5-B5DC-6A5AD054F1C7} = {D8AC5291-AAE6-4C1E-BB4E-B145E4EE3BF6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50A5632E-0616-4CA4-B647-143D543E3F7C}

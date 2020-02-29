@@ -13,7 +13,7 @@ namespace MyStuff.DotNet.DevDeploy.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202002291349422_InitMigration"; }
+            get { return "202002291922109_InitMigration"; }
         }
         
         string IMigrationMetadata.Source

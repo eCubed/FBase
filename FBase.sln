@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyStuff.DotNet.DevDeploy", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyStuff.DotNet.Server", "MyStuff.DotNet.Server\MyStuff.DotNet.Server.csproj", "{905E5FFA-2BE5-4259-87CE-A0FD7A5658FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFramework.StarterWebApi", "NetFramework.StarterWebApi\NetFramework.StarterWebApi.csproj", "{B19709C6-A226-4178-A03C-283B5B26F8F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{905E5FFA-2BE5-4259-87CE-A0FD7A5658FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{905E5FFA-2BE5-4259-87CE-A0FD7A5658FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{905E5FFA-2BE5-4259-87CE-A0FD7A5658FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B19709C6-A226-4178-A03C-283B5B26F8F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B19709C6-A226-4178-A03C-283B5B26F8F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B19709C6-A226-4178-A03C-283B5B26F8F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B19709C6-A226-4178-A03C-283B5B26F8F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,6 +103,7 @@ Global
 		{C7A3392A-CEFA-43D6-9862-AC42835D0337} = {D8AC5291-AAE6-4C1E-BB4E-B145E4EE3BF6}
 		{94FFF521-6380-4192-A338-F17D8B20F12B} = {D8AC5291-AAE6-4C1E-BB4E-B145E4EE3BF6}
 		{905E5FFA-2BE5-4259-87CE-A0FD7A5658FA} = {D8AC5291-AAE6-4C1E-BB4E-B145E4EE3BF6}
+		{B19709C6-A226-4178-A03C-283B5B26F8F8} = {D8AC5291-AAE6-4C1E-BB4E-B145E4EE3BF6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50A5632E-0616-4CA4-B647-143D543E3F7C}

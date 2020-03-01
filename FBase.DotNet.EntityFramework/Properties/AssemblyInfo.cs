@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("FBase.DotNet.EntityFramework")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Contains the EntityStoreBase for easier implementation of entity stores. This is a part of the FBase system that makes development easier. This is a dependency for .net Framework libraries and applications.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("FBase.DotNet.EntityFramework")]

@@ -50,6 +50,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="FBase.DotNet.EntityFramework, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FBase.DotNet.EntityFramework.1.0.0\lib\net451\FBase.DotNet.EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="FBase.Foundations, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FBase.Foundations.1.0.0\lib\netstandard1.2\FBase.Foundations.dll</HintPath>
     </Reference>
@@ -118,10 +121,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FBase.DotNet.EntityFramework\FBase.DotNet.EntityFramework.csproj">
-      <Project>{bc0e0c78-43e9-4637-b44a-eb390d3b6450}</Project>
-      <Name>FBase.DotNet.EntityFramework</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MyStuff.DotNet.EntityFramework\MyStuff.DotNet.EntityFramework.csproj">
       <Project>{c7a3392a-cefa-43d6-9862-ac42835d0337}</Project>
       <Name>MyStuff.DotNet.EntityFramework</Name>

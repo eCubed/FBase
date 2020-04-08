@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyStuff.DotNet.Server", "My
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFramework.StarterWebApi", "NetFramework.StarterWebApi\NetFramework.StarterWebApi.csproj", "{B19709C6-A226-4178-A03C-283B5B26F8F8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FBase.ApiClient", "FBase.ApiClient\FBase.ApiClient.csproj", "{FA9B5ECF-2198-421F-99C4-13D65659AEDC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,6 +91,10 @@ Global
 		{B19709C6-A226-4178-A03C-283B5B26F8F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B19709C6-A226-4178-A03C-283B5B26F8F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B19709C6-A226-4178-A03C-283B5B26F8F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA9B5ECF-2198-421F-99C4-13D65659AEDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA9B5ECF-2198-421F-99C4-13D65659AEDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA9B5ECF-2198-421F-99C4-13D65659AEDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA9B5ECF-2198-421F-99C4-13D65659AEDC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

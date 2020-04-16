@@ -2,8 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.2</TargetFramework>
-    <Description>Foundational classes and functionality for managing data, independent of storage mechanism. Includes base routines for CRUD operations, including paginated result set, view models, and communicating errors.</Description>
+    <Description>Correction made on Create with view model</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.1.1</Version>
+    <AssemblyVersion>1.1.1.0</AssemblyVersion>
   </PropertyGroup>
 
 </Project>

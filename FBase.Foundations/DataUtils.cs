@@ -33,27 +33,25 @@ namespace FBase.Foundations
             return new ManagerResult();
         }
 
-        public static async Task<ManagerResult> CreateAsync<T, TKey, TViewModel>(TViewModel viewModel, IAsyncStore<T, TKey> store,
-            Func<T, Task<T>> findUniqueAsync = null, Func<T, ManagerResult> canCreate = null, Action<T> setNonViewModelData = null)
+        public static async Task<ManagerResult<TKey>> CreateAsync<T, TKey, TModel>(TModel model, IAsyncStore<T, TKey> store,
+            Func<T, Task<T>> findUniqueAsync = null, Func<T, ManagerResult> canCreate = null, Action<T> setNonModelData = null)
             where T : class, IIdentifiable<TKey>, new()
-            where TViewModel : class, IViewModel<T, TKey>
+            where TModel : class, IModel<T>
         {
             T newData = new T();
-            viewModel.UpdateObject(newData);
+            model.UpdateObject(newData);
 
-            if (setNonViewModelData != null)
-                setNonViewModelData.Invoke(newData);
+            if (setNonModelData != null)
+                setNonModelData.Invoke(newData);
 
-            var createRes = await CreateAsync(newData, store, findUniqueAsync, canCreate);
+            var createRes = await DataUtils.CreateAsync(newData, store, findUniqueAsync, canCreate);
 
             if (!createRes.Success)
-                return createRes;
+                return new ManagerResult<TKey>(createRes.Errors);
 
-            viewModel.Id = newData.Id;
-
-            return createRes;
+            return new ManagerResult<TKey>(newData.Id);
         }
-        
+
         #endregion Create
 
 
@@ -125,53 +123,53 @@ namespace FBase.Foundations
             return new ManagerResult();
         }
 
-        public static async Task<ManagerResult> UpdateAsync<T, TKey, TViewModel>(TViewModel viewModel, IAsyncStore<T, TKey> store,
-            Func<T, Task<T>> findUniqueAsync = null, Func<T, ManagerResult> canUpdate = null, Action<T> setNonViewModelData = null)
+        public static async Task<ManagerResult> UpdateAsync<T, TKey, TModel>(TKey id, TModel model, IAsyncStore<T, TKey> store,
+            Func<T, Task<T>> findUniqueAsync = null, Func<T, ManagerResult> canUpdate = null, Action<T> setNonModelData = null)
             where T : class, IIdentifiable<TKey>, new()
-            where TViewModel : class, IViewModel<T, TKey>
+            where TModel : class, IModel<T>
         {
-            return await UpdateAsync(viewModel.Id, store, findUniqueAsync, canUpdate,
+            return await DataUtils.UpdateAsync(id, store, findUniqueAsync, canUpdate,
                 fillNewValues: data => {
-                    viewModel.UpdateObject(data);
-                    setNonViewModelData?.Invoke(data);
+                    model.UpdateObject(data);
+                    setNonModelData?.Invoke(data);
                 });
         }
 
         #endregion Update
 
         #region Get
-        public static async Task<ManagerResult<TViewModel>> GetOneRecordAsync<T, TKey, TViewModel>(TKey id, IAsyncStore<T, TKey> store,
+        public static async Task<ManagerResult<TModel>> GetOneRecordAsync<T, TKey, TModel>(TKey id, IAsyncStore<T, TKey> store,
             Func<T, ManagerResult> canGet = null)
             where T : class, IIdentifiable<TKey>, new()
-            where TViewModel : class, IViewModel<T, TKey>, new()
+            where TModel : class, IModel<T>, new()
         {
             T data = await store.FindByIdAsync(id);
 
             if (data == null)
-                return new ManagerResult<TViewModel>(ManagerErrors.RecordNotFound);
+                return new ManagerResult<TModel>(ManagerErrors.RecordNotFound);
 
             if (canGet != null)
             {
                 var canGetResult = canGet.Invoke(data);
                 if (!canGetResult.Success)
-                    return new ManagerResult<TViewModel>(canGetResult.Errors);
+                    return new ManagerResult<TModel>(canGetResult.Errors);
             }
 
-            TViewModel viewModel = new TViewModel();
-            viewModel.FillViewModel(data);
+            TModel model = new TModel();
+            model.FillModel(data);
 
-            return new ManagerResult<TViewModel>(viewModel);
+            return new ManagerResult<TModel>(model);
         }
 
-        public static ResultSet<TViewModel> GetMany<T, TKey, TViewModel>(IQueryable<T> filteredQueryable, int page = 1, int pageSize = 10)
-            where T : class, IIdentifiable<TKey>
-            where TViewModel : class, IViewModel<T, TKey>, new()
+        public static ResultSet<TModel> GetMany<T, TKey, TModel>(IQueryable<T> filteredQueryable, int page = 1, int pageSize = 10)
+           where T : class, IIdentifiable<TKey>
+           where TModel : class, IModel<T>, new()
         {
             return ResultSetHelper.Convert(ResultSetHelper.GetResults<T, TKey>(filteredQueryable, page, pageSize), data =>
             {
-                TViewModel viewModel = new TViewModel();
-                viewModel.FillViewModel(data);
-                return viewModel;
+                TModel model = new TModel();
+                model.FillModel(data);
+                return model;
             });
         }
 

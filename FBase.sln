@@ -31,7 +31,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyStuff.DotNet.Server", "My
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFramework.StarterWebApi", "NetFramework.StarterWebApi\NetFramework.StarterWebApi.csproj", "{B19709C6-A226-4178-A03C-283B5B26F8F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FBase.ApiClient", "FBase.ApiClient\FBase.ApiClient.csproj", "{FA9B5ECF-2198-421F-99C4-13D65659AEDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FBase.ApiClient", "FBase.ApiClient\FBase.ApiClient.csproj", "{FA9B5ECF-2198-421F-99C4-13D65659AEDC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FBase.ApiServer", "FBase.ApiServer\FBase.ApiServer.csproj", "{E68883A4-9079-4272-A114-8AF89EC1E72E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FBase.Cryptography", "FBase.Cryptography\FBase.Cryptography.csproj", "{A6A6046E-D879-4464-A469-126DE6167BBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,6 +99,14 @@ Global
 		{FA9B5ECF-2198-421F-99C4-13D65659AEDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA9B5ECF-2198-421F-99C4-13D65659AEDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA9B5ECF-2198-421F-99C4-13D65659AEDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E68883A4-9079-4272-A114-8AF89EC1E72E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E68883A4-9079-4272-A114-8AF89EC1E72E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E68883A4-9079-4272-A114-8AF89EC1E72E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E68883A4-9079-4272-A114-8AF89EC1E72E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6A6046E-D879-4464-A469-126DE6167BBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6A6046E-D879-4464-A469-126DE6167BBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6A6046E-D879-4464-A469-126DE6167BBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6A6046E-D879-4464-A469-126DE6167BBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

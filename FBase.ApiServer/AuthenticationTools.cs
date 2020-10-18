@@ -13,8 +13,7 @@ namespace FBase.ApiServer
 {
     public static class AuthenticationTools
     {
-        public static TTokenResponse GenerateTokenResponse<TTokenResponse, TKey>(string cryptionKey,
-            string issuer, string audience,
+        public static TTokenResponse GenerateTokenResponse<TTokenResponse, TKey>(IAppConfig appConfig,
             string username, TKey userId, List<string> roles,
             List<KeyValuePair<string, string>> additionalInfo = null)
             where TTokenResponse : class, ITokenResponse, new()
@@ -28,12 +27,12 @@ namespace FBase.ApiServer
             });
             claims.Add(new Claim("UserId", userId.ToString()));
 
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(cryptionKey));
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appConfig.CryptionKey));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
             var tokenOptions = new JwtSecurityToken(
-                issuer: issuer,
-                audience: audience,
+                issuer: appConfig.Issuer,
+                audience: appConfig.Audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddDays(7),
                 signingCredentials: signinCredentials
@@ -51,8 +50,8 @@ namespace FBase.ApiServer
         }
 
         public static async Task<ManagerResult<TTokenResponse>> LoginAsync<TUser, TKey, TTokenResponse>(
-            LoginModel loginModel, UserManager<TUser> userManager, string cryptionKey, string issuer,
-            string audience, List<KeyValuePair<string, string>> additionalInfo = null)
+            LoginModel loginModel, UserManager<TUser> userManager, IAppConfig appConfig,
+            List<KeyValuePair<string, string>> additionalInfo = null)
             where TUser : IdentityUser<TKey>
             where TKey : IEquatable<TKey>
             where TTokenResponse : class, ITokenResponse, new()
@@ -68,7 +67,7 @@ namespace FBase.ApiServer
             List<string> roles = (await userManager.GetRolesAsync(user)).ToList();
 
             return new ManagerResult<TTokenResponse>(
-                GenerateTokenResponse<TTokenResponse, TKey>(cryptionKey, issuer, audience, loginModel.Username, user.Id, roles,
+                GenerateTokenResponse<TTokenResponse, TKey>(appConfig, loginModel.Username, user.Id, roles,
                     additionalInfo));
         }
     }

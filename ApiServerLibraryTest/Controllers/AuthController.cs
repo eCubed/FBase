@@ -24,7 +24,7 @@ namespace ApiServerLibraryTest.Controllers
         public async Task<IActionResult> LoginAsync([FromBody] LoginModel loginModel)
         {
             var res = await AuthenticationTools.LoginAsync<TestUser, int, TokenResponse>(
-                loginModel, UserManager, Config.CryptionKey, Config.Issuer, Config.Audience);
+                loginModel, UserManager, Config);
 
             if (!res.Success)
                 return this.DiscernErrorActionResult(res);

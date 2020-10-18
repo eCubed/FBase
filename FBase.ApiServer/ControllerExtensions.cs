@@ -68,6 +68,8 @@ namespace FBase.ApiServer
 
             if (errors.Contains(ManagerErrors.Unauthorized))
                 return controller.StatusCode(401, new { Errors = errors });
+            else if (errors.Contains(ManagerErrors.RecordNotFound))
+                return controller.StatusCode(404, new { Errors = errors });
             else
                 return controller.BadRequest(new { Errors = errors });
         }

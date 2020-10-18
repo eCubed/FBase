@@ -2,7 +2,7 @@
 {
     public interface IApiClientHasher
     {
-        string GenerateHash(string clientId, string clientSecret, string arbitraryInput);
-        bool CheckHash(string apiKey, string clientSecret, string xInputValue, string clientHash);
+        string GenerateHash(string apiKey, string secret, string arbitraryInput);
+        bool CheckHash(string apiKey, string secret, string arbitraryInput, string clientHash);
     }
 }

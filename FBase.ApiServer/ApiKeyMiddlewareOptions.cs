@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FBase.ApiServer
+﻿namespace FBase.ApiServer
 {
     public class ApiKeyMiddlewareOptions
     {

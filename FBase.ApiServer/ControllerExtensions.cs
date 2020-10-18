@@ -34,7 +34,7 @@ namespace FBase.ApiServer
             where TApiClient : class, IApiClient<TKey>
         {
             string publicKey = controller.Request.HttpContext.User?.Claims.SingleOrDefault(c => c.Type == "abc")?.Value ?? "";
-            TApiClient apiClient = apiClientProvider.GetClientByPublicKey(publicKey);
+            TApiClient apiClient = apiClientProvider.GetClientByApiKey(publicKey);
 
             if (apiClient == null)
                 return null;

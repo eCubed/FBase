@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -17,12 +18,12 @@ namespace FBase.ApiServer
             ApiKeyMiddlewareOptions = apiKeyMiddlewareOptions ?? new ApiKeyMiddlewareOptions();
         }
 
-        private ClaimsPrincipal CreateClaimsPrincipalForClient(string clientIdString)
+        private ClaimsPrincipal CreateClaimsPrincipalForClient(TKey clientId)
         {
             ClaimsPrincipal principal = new ClaimsPrincipal();
 
             List<Claim> claims = new List<Claim>();
-            claims.Add(new Claim(ApiKeyMiddlewareOptions.ClientIdentifierKey, clientIdString));
+            claims.Add(new Claim(ApiKeyMiddlewareOptions.ClientIdentifierKey, clientId.ToString() ));
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims);
 
@@ -49,13 +50,13 @@ namespace FBase.ApiServer
 
                 string apiKey = context.Request.Headers[ApiKeyMiddlewareOptions.ApiKeyHeaderKey].ToString();
 
-                if (!apiClientProvider.ClientExists(apiKey))
+                TApiClient apiClient = apiClientProvider.GetClientByApiKey(apiKey);
+
+                if (apiClient == null)
                 {
                     await ApiServerMiddlewareHelpers.WriteJsonErrorResponseAsync(context, StatusCodes.Status401Unauthorized, ApiServerMessages.InvalidClient);
                     return;
                 }
-
-                TApiClient apiClient = apiClientProvider.GetClientByPublicKey(apiKey);
 
                 string[] clientAuthValues = context.Request.Headers[ApiKeyMiddlewareOptions.HashHeaderKey].ToString().Split(' ');
 
@@ -66,7 +67,7 @@ namespace FBase.ApiServer
                 }
 
                 string clientHash = clientAuthValues[0];
-                string clientSecret = apiClientProvider.GetClientSecret(apiKey);
+                string clientSecret = apiClient.Secret;
 
                 string xInputValue = context.Request.Headers[ApiKeyMiddlewareOptions.DataHeaderKey].ToString();
 
@@ -77,10 +78,23 @@ namespace FBase.ApiServer
                 }
 
                 // Now that the headers validate, we now need to store that client id into the principal...
-                context.User = CreateClaimsPrincipalForClient(apiClient.GetIdAsString());
+                context.User = CreateClaimsPrincipalForClient(apiClient.Id);
             }
 
             await _next.Invoke(context);
+        }
+    }
+
+    public static class ApiKeyMiddlewareExtensions
+    {
+        public static IApplicationBuilder UseApiKeyMiddleware<TApiClient, TKey>(this IApplicationBuilder applicationBuilder,
+            ApiKeyMiddlewareOptions options = null)
+            where TApiClient: class, IApiClient<TKey>
+        {
+            if (options == null)
+                options = new ApiKeyMiddlewareOptions();
+
+            return applicationBuilder.UseMiddleware<ApiKeyMiddleware<TApiClient, TKey>>(options);
         }
     }
 }

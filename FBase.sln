@@ -33,9 +33,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFramework.StarterWebApi"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FBase.ApiClient", "FBase.ApiClient\FBase.ApiClient.csproj", "{FA9B5ECF-2198-421F-99C4-13D65659AEDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FBase.ApiServer", "FBase.ApiServer\FBase.ApiServer.csproj", "{E68883A4-9079-4272-A114-8AF89EC1E72E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FBase.ApiServer", "FBase.ApiServer\FBase.ApiServer.csproj", "{E68883A4-9079-4272-A114-8AF89EC1E72E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FBase.Cryptography", "FBase.Cryptography\FBase.Cryptography.csproj", "{A6A6046E-D879-4464-A469-126DE6167BBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FBase.Cryptography", "FBase.Cryptography\FBase.Cryptography.csproj", "{A6A6046E-D879-4464-A469-126DE6167BBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiServerLibraryTest", "ApiServerLibraryTest\ApiServerLibraryTest.csproj", "{D4C74E5F-2D97-472C-AC6B-84D0E74E9678}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -107,6 +109,10 @@ Global
 		{A6A6046E-D879-4464-A469-126DE6167BBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6A6046E-D879-4464-A469-126DE6167BBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6A6046E-D879-4464-A469-126DE6167BBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4C74E5F-2D97-472C-AC6B-84D0E74E9678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4C74E5F-2D97-472C-AC6B-84D0E74E9678}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4C74E5F-2D97-472C-AC6B-84D0E74E9678}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4C74E5F-2D97-472C-AC6B-84D0E74E9678}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -122,6 +128,7 @@ Global
 		{94FFF521-6380-4192-A338-F17D8B20F12B} = {D8AC5291-AAE6-4C1E-BB4E-B145E4EE3BF6}
 		{905E5FFA-2BE5-4259-87CE-A0FD7A5658FA} = {D8AC5291-AAE6-4C1E-BB4E-B145E4EE3BF6}
 		{B19709C6-A226-4178-A03C-283B5B26F8F8} = {D8AC5291-AAE6-4C1E-BB4E-B145E4EE3BF6}
+		{D4C74E5F-2D97-472C-AC6B-84D0E74E9678} = {D8AC5291-AAE6-4C1E-BB4E-B145E4EE3BF6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50A5632E-0616-4CA4-B647-143D543E3F7C}

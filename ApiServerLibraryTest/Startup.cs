@@ -5,6 +5,7 @@ using FBase.ApiServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -64,9 +65,9 @@ namespace ApiServerLibraryTest
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = "Test Issuer",
-                    ValidAudience = "Test Audience",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Aaaa-0000-XYZWT")),
+                    ValidIssuer = config.Issuer,
+                    ValidAudience = config.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.CryptionKey)),
                 };
             });
 
@@ -96,11 +97,23 @@ namespace ApiServerLibraryTest
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors();
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All
+            });
+
+            app.UseCors(options =>
+            {
+                options.AllowAnyOrigin();
+                options.AllowAnyMethod();
+                options.AllowAnyHeader();
+            });
+
             app.UseStaticFiles();
             app.UseDefaultFiles();
             app.UseApiKeyMiddleware<ApiClient, int>();
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

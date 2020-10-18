@@ -1,9 +1,12 @@
-﻿using ApiServerLibraryTest.Models;
+﻿using ApiServerLibraryTest.Data;
+using ApiServerLibraryTest.Models;
 using FBase.ApiServer;
 using FBase.Foundations;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,10 +17,12 @@ namespace ApiServerLibraryTest.Controllers
     public class ValuesController : ControllerBase
     {
         private IApiClientHasher ApiClientHasher { get; set; }
+        private UserManager<TestUser> UserManager { get; set; }
 
-        public ValuesController(IApiClientHasher apiClientHasher)
+        public ValuesController(IApiClientHasher apiClientHasher, UserManager<TestUser> userManager)
         {
             ApiClientHasher = apiClientHasher;
+            UserManager = userManager;
         }
 
         // GET: api/<ValuesController>
@@ -53,6 +58,15 @@ namespace ApiServerLibraryTest.Controllers
 
             return this.DiscernErrorActionResult(managerResult);
 
+        }
+        
+        [HttpGet("protected")]
+        [Authorize(Roles = "subscriber")]
+        public async Task<IActionResult> GetProtected()
+        {
+            AuthenticatedInfo authenticatedInfo = await this.ResolveAuthenticatedInfoAsync<AuthenticatedInfo, int, TestUser>(UserManager);
+
+            return Ok(authenticatedInfo);
         }
 
         // POST api/<ValuesController>

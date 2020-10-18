@@ -1,4 +1,6 @@
-﻿using FBase.ApiServer;
+﻿using ApiServerLibraryTest.Models;
+using FBase.ApiServer;
+using FBase.Foundations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -39,6 +41,18 @@ namespace ApiServerLibraryTest.Controllers
         public string Get(int id)
         {
             return "value";
+        }
+
+        [HttpGet("managerresult/{n}")]
+        public IActionResult GetManagerResult(int n)
+        {
+            List<string> errors = new List<string>();
+            errors.Add((n % 2 == 0) ? ManagerErrors.Unauthorized : "Other");
+
+            ManagerResult<ApiClient> managerResult = new ManagerResult<ApiClient>(errors.ToArray());
+
+            return this.DiscernErrorActionResult(managerResult);
+
         }
 
         // POST api/<ValuesController>

@@ -59,19 +59,6 @@ namespace FBase.ApiServer
             return (user == null) ? false : (await userManager.IsInRoleAsync(user, administratorRoleName));
         }
 
-        public static IActionResult DiscernErrorActionResult<T>(this ControllerBase controller, ManagerResult<T> res)
-        {
-            if (!res.Errors.Any())
-                throw new NotSupportedException();
-
-            List<string> errors = res.Errors.ToList();
-
-            if (errors.Contains(ManagerErrors.Unauthorized))
-                return controller.StatusCode(401, new { Errors = errors });
-            else
-                return controller.BadRequest(new { Errors = errors });
-        }
-
         public static IActionResult DiscernErrorActionResult(this ControllerBase controller, ManagerResult res)
         {
             if (!res.Errors.Any())

@@ -1,6 +1,6 @@
 ﻿namespace FBase.ApiServer
 {
-    public interface IAppConfig
+    public interface IApiServerConfig
     {
         string ConnectionString { get; set; }
         string CryptionKey { get; set; }

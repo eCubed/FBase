@@ -9,10 +9,7 @@ namespace ApiServerLibraryTest.Models
         public string Username { get; set; }
         public string Token { get; set; }
         public List<string> Roles { get; set; }
-
-        public void SetAdditionalProperties(List<KeyValuePair<string, string>> valuePairs)
-        {
-            throw new NotSupportedException();
-        }
+        public string RefreshToken { get; set; }
+        public DateTime ExpiresAt { get; set; }
     }
 }

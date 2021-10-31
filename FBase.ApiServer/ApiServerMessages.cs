@@ -14,5 +14,6 @@
         public static readonly string InvalidUserCredentials = "invalid-user-credentials";
         public static readonly string OtherParametersRequired = "other-parameters-required";
         public static readonly string PasscodeRequired = "passcode-required";
+        public static readonly string Unauthorized = "unauthorized";
     }
 }

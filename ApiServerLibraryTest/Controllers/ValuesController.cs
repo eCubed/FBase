@@ -64,7 +64,7 @@ namespace ApiServerLibraryTest.Controllers
         [Authorize(Roles = "subscriber")]
         public async Task<IActionResult> GetProtected()
         {
-            AuthenticatedInfo authenticatedInfo = await this.ResolveAuthenticatedInfoAsync<AuthenticatedInfo, int, TestUser>(UserManager);
+            AuthenticatedInfo<int> authenticatedInfo = await this.ResolveAuthenticatedEntitiesAsync<TestUser, int>(UserManager);
 
             return Ok(authenticatedInfo);
         }

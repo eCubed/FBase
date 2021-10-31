@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Text;
 using System.Text.Json;
 
@@ -33,6 +34,20 @@ namespace ApiServerLibraryTest
             var config = new ApiServerLibraryTestConfig();
             Configuration.Bind("ApiServerLibraryTestConfig", config);
             services.AddSingleton(config);
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = config.Issuer,
+                ValidAudience = config.Audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.CryptionKey)),
+                ClockSkew = TimeSpan.Zero
+            };
+
+            services.AddSingleton(tokenValidationParameters);
 
             services.AddMvc();
             services.AddMvcCore().AddJsonOptions(options =>
@@ -59,16 +74,9 @@ namespace ApiServerLibraryTest
             })
             .AddJwtBearer(options =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = config.Issuer,
-                    ValidAudience = config.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.CryptionKey)),
-                };
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = tokenValidationParameters;
             });
 
 

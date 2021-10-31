@@ -2,7 +2,7 @@
 
 namespace ApiServerLibraryTest
 {
-    public class ApiServerLibraryTestConfig : IAppConfig
+    public class ApiServerLibraryTestConfig : IApiServerConfig
     {
         public string ConnectionString { get; set; }
         public string CryptionKey { get; set; }

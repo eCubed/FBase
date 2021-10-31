@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FBase.ApiServer
 {
@@ -6,8 +7,8 @@ namespace FBase.ApiServer
     {
         string Username { get; set; }
         string Token { get; set; }
+        public string RefreshToken { get; set; }
         List<string> Roles { get; set; }
-
-        void SetAdditionalProperties(List<KeyValuePair<string, string>> valuePairs);
+        public DateTime ExpiresAt { get; set; }
     }
 }

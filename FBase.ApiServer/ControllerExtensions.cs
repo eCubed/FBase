@@ -10,28 +10,28 @@ namespace FBase.ApiServer
 {
     public static class ControllerExtensions
     {
-        public static async Task<TAuthenticatedInfo> ResolveAuthenticatedInfoAsync<TAuthenticatedInfo, TKey, TUser>(this ControllerBase controller,
-            UserManager<TUser> userManager)
-            where TAuthenticatedInfo : class, IAuthenticatedInfo<TKey>, new()
-            where TUser: IdentityUser<TKey>
-            where TKey : struct, IEquatable<TKey>
+        public static async Task<AuthenticatedInfo<TKey>> ResolveAuthenticatedEntitiesAsync<TUser, TKey>(this ControllerBase controller,
+           UserManager<TUser> userManager)
+            where TUser : IdentityUser<TKey>
+            where TKey : IEquatable<TKey>
         {
             string username = controller.Request.HttpContext.User?.Identity?.Name ?? "";
             TUser user = await userManager.FindByNameAsync(username);
 
-            TKey userId = user?.Id ?? default;
+            TKey userId = (user != null) ? user.Id : default(TKey);
 
-            return new TAuthenticatedInfo
+            return new AuthenticatedInfo<TKey>
             {
                 RequestorId = userId,
                 RequestorName = user?.UserName ?? ""
             };
         }
 
-        public static async Task<TAuthenticatedInfo> ResolveApiClientAuthenticatedInfo<TAuthenticatedInfo, TKey, TApiClient>(this ControllerBase controller,
+        public static async Task<AuthenticatedInfo<TKey>> ResolveApiClientAuthenticatedInfo<TApiClient, TKey>(
+            this ControllerBase controller,
             IApiClientProvider<TApiClient, TKey> apiClientProvider)
-            where TAuthenticatedInfo : class, IAuthenticatedInfo<TKey>, new()
             where TApiClient : class, IApiClient<TKey>
+            where TKey: IEquatable<TKey>
         {
             string publicKey = controller.Request.HttpContext.User?.Claims.SingleOrDefault(c => c.Type == "abc")?.Value ?? "";
             TApiClient apiClient = apiClientProvider.GetClientByApiKey(publicKey);
@@ -41,7 +41,7 @@ namespace FBase.ApiServer
 
             await Task.FromResult(0);
 
-            return new TAuthenticatedInfo
+            return new AuthenticatedInfo<TKey>
             {
                 RequestorId = apiClient.Id,
                 RequestorName = apiClient.Name

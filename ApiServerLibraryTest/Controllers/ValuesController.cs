@@ -26,6 +26,7 @@ namespace ApiServerLibraryTest.Controllers
         }
 
         // GET: api/<ValuesController>
+        [Authorize]
         [HttpGet("showheaders")]
         public IActionResult Get()
         {

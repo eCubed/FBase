@@ -16,49 +16,11 @@ namespace ApiServerLibraryTest.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        private IApiClientHasher ApiClientHasher { get; set; }
         private UserManager<TestUser> UserManager { get; set; }
 
-        public ValuesController(IApiClientHasher apiClientHasher, UserManager<TestUser> userManager)
+        public ValuesController(UserManager<TestUser> userManager)
         {
-            ApiClientHasher = apiClientHasher;
             UserManager = userManager;
-        }
-
-        // GET: api/<ValuesController>
-        [Authorize]
-        [HttpGet("showheaders")]
-        public IActionResult Get()
-        {
-            return Ok(new
-            {
-                xApiKey = "TEST-CLIENT-1000",
-                xData = "12345-678910-1112",
-                xHash = ApiClientHasher.GenerateHash(
-                    apiKey: "TEST-CLIENT-1000",
-                    secret: "TestSecret-12345",
-                    arbitraryInput: "12345-678910-1112")
-            });
-        }
-
-        // GET api/<ValuesController>/5
-        [Authorize(Policy = "RequiresClientIdClaim")]
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        [HttpGet("managerresult/{n}")]
-        public IActionResult GetManagerResult(int n)
-        {
-            List<string> errors = new List<string>();
-            errors.Add((n % 2 == 0) ? ManagerErrors.Unauthorized : "Other");
-
-            ManagerResult<ApiClient> managerResult = new ManagerResult<ApiClient>(errors.ToArray());
-
-            return this.DiscernErrorActionResult(managerResult);
-
         }
         
         [HttpGet("protected")]

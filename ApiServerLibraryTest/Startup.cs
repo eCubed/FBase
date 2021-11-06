@@ -1,7 +1,4 @@
 using ApiServerLibraryTest.Data;
-using ApiServerLibraryTest.Models;
-using ApiServerLibraryTest.Providers;
-using FBase.ApiServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -79,10 +76,6 @@ namespace ApiServerLibraryTest
                 options.TokenValidationParameters = tokenValidationParameters;
             });
 
-
-            services.AddTransient<IApiClientHasher, DefaultApiClientHasher>();
-            services.AddTransient<IApiClientProvider<ApiClient, int>, TestApiClientProvider>();
-
             services.AddCors();
             services.AddRazorPages();
             services.AddControllers();
@@ -119,7 +112,6 @@ namespace ApiServerLibraryTest
 
             app.UseStaticFiles();
             app.UseDefaultFiles();
-            app.UseApiKeyMiddleware<ApiClient, int>();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

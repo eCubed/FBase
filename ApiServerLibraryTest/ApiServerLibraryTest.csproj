@@ -15,4 +15,8 @@
     <ProjectReference Include="..\FBase.DotNetCore.EntityFramework\FBase.DotNetCore.EntityFramework.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Providers\" />
+  </ItemGroup>
+
 </Project>

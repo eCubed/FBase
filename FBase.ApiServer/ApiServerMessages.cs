@@ -2,6 +2,7 @@
 {
     public static class ApiServerMessages
     {
+        public static readonly string CredentialSetNotFound = 'credential-set-not-found';
         public static readonly string CredentialsProviderNotSpecified = "credentials-provider-not-specified";
         public static readonly string DataHeaderRequired = "data-header-required";
         public static readonly string HashHeaderRequired = "hash-header-required"; 

@@ -11,5 +11,8 @@ namespace FBase.ApiServer.OAuth
     {
         Task<TApp> FindByNameAsync(string name);
         IQueryable<TApp> GetQueryableApps(TUserKey userId);
+        IQueryable<IScope> GetQueryableScopes(long? appId = null);
+        Task AddScopeToAppAsync(int scopeId, long appId);
+        Task RemoveScopeFromAppAsync(int scopeId, long appId);
     }
 }

@@ -23,7 +23,7 @@ namespace FBase.ApiServer.OAuth
             return await GetCredentialSetStore().FindAsync(name, appId);
         }
 
-        private async Task<TCredentialSet> FindByUniqueAsync(TCredentialSet match)
+        private async Task<TCredentialSet> FindUniqueAsync(TCredentialSet match)
         {
             return await GetCredentialSetStore().FindAsync(match.Name, match.AppId);
         }
@@ -46,7 +46,7 @@ namespace FBase.ApiServer.OAuth
             return await DataUtils.CreateAsync(
                 entity: credentialSet,
                 store: GetCredentialSetStore(),
-                findUniqueAsync: FindByUniqueAsync);
+                findUniqueAsync: FindUniqueAsync);
         }
 
         private Func<TCredentialSet, ManagerResult> GenerateCanManipulateFunction<TUserKey>(TUserKey requestorId)
@@ -73,7 +73,7 @@ namespace FBase.ApiServer.OAuth
             return await DataUtils.UpdateAsync(
                 id: id,
                 store: GetCredentialSetStore(),
-                findUniqueAsync: FindByUniqueAsync,                
+                findUniqueAsync: FindUniqueAsync,                
                 canUpdate: GenerateCanManipulateFunction(requestorId),
                 fillNewValues: (originalCredentialSet) => {
                     originalCredentialSet.Name = name;
@@ -89,7 +89,7 @@ namespace FBase.ApiServer.OAuth
             return await DataUtils.UpdateAsync(
                 id: id,
                 store: GetCredentialSetStore(),
-                findUniqueAsync: FindByUniqueAsync,
+                findUniqueAsync: FindUniqueAsync,
                 canUpdate: GenerateCanManipulateFunction(requestorId),
                 fillNewValues: (originalCredentialSet) => {
                     originalCredentialSet.ClientId = credentialValuesProvider.GenerateClientId();

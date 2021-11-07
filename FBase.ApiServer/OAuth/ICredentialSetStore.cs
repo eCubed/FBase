@@ -10,6 +10,7 @@ namespace FBase.ApiServer.OAuth
     {
         IQueryable<TCredentialSet> GetQueryableCredentialSets();
         Task<TCredentialSet> FindAsync(string name, long appId);
+        Task<TCredentialSet> FindByClientIdAsync(string clientId);
 
         Task<IApp<TUserKey>> FindCredentialSetAsync<TUserKey>(long appId) where TUserKey : IEquatable<TUserKey>;
     }

@@ -23,6 +23,11 @@ namespace FBase.ApiServer.OAuth
             return await GetCredentialSetStore().FindAsync(name, appId);
         }
 
+        public async Task<TCredentialSet> FindByClientIdAsync(string clientId)
+        {
+            return await GetCredentialSetStore().FindByClientIdAsync(clientId);
+        }
+
         private async Task<TCredentialSet> FindUniqueAsync(TCredentialSet match)
         {
             return await GetCredentialSetStore().FindAsync(match.Name, match.AppId);

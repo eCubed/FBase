@@ -18,7 +18,7 @@ namespace FBase.ApiServer.OAuth
             return (ICredentialSetStore<TCredentialSet>)Store;
         }
 
-        public async Task<TCredentialSet> FindByNameAsync(string name, long appId)
+        public async Task<TCredentialSet> FindAsync(string name, long appId)
         {
             return await GetCredentialSetStore().FindAsync(name, appId);
         }
@@ -54,7 +54,7 @@ namespace FBase.ApiServer.OAuth
         {
             return (credentialSet) =>
             {
-                var app = GetCredentialSetStore().FindAppAsync<TUserKey>(credentialSet.AppId).Result;
+                var app = GetCredentialSetStore().FindCredentialSetAsync<TUserKey>(credentialSet.AppId).Result;
 
                 if (app == null)
                     return new ManagerResult(ApiServerMessages.CredentialSetNotFound);

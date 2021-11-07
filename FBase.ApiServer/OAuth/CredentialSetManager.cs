@@ -59,7 +59,7 @@ namespace FBase.ApiServer.OAuth
         {
             return (credentialSet) =>
             {
-                var app = GetCredentialSetStore().FindCredentialSetAsync<TUserKey>(credentialSet.AppId).Result;
+                var app = GetCredentialSetStore().FindAppAsync<TUserKey>(credentialSet.AppId).Result;
 
                 if (app == null)
                     return new ManagerResult(ApiServerMessages.CredentialSetNotFound);

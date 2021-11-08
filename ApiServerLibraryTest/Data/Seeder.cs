@@ -102,7 +102,7 @@ namespace ApiServerLibraryTest.Data
 
 
                     // Create The Credentials
-                    await CredentialSetManager.CreateAsync("Native Client", createRes.Data.Id);
+                    await CredentialSetManager.CreateAsync("Native Client", createRes.Data.Id, "http://localhost:5000/accept-auth-code");
                 }
             }
         }

@@ -38,7 +38,7 @@ namespace FBase.ApiServer.OAuth
             return GetCredentialSetStore().GetQueryableCredentialSets().Where(cs => cs.AppId == appId).OrderBy(cs => cs.Name).ToList();
         }
 
-        public async Task<ManagerResult> CreateAsync(string name, long appId, ICredentialValuesProvider credentialValuesProvider = null)
+        public async Task<ManagerResult> CreateAsync(string name, long appId, string redirectUrl, ICredentialValuesProvider credentialValuesProvider = null)
         {
             credentialValuesProvider = credentialValuesProvider ?? new DummyCredentialValuesProvider();
 
@@ -46,6 +46,7 @@ namespace FBase.ApiServer.OAuth
             credentialSet.Name = name;
             credentialSet.ClientId = credentialValuesProvider.GenerateClientId();
             credentialSet.ClientSecret = credentialValuesProvider.GenerateClientSecret();
+            credentialSet.RedirectUrl = redirectUrl;
             credentialSet.AppId = appId;
 
             return await DataUtils.CreateAsync(
@@ -72,7 +73,7 @@ namespace FBase.ApiServer.OAuth
             
         }
 
-        public async Task<ManagerResult> UpdateAsync<TUserKey>(long id, string name, TUserKey requestorId)
+        public async Task<ManagerResult> UpdateAsync<TUserKey>(long id, string name, string redirectUrl, TUserKey requestorId)
             where TUserKey: IEquatable<TUserKey>
         {
             return await DataUtils.UpdateAsync(
@@ -82,6 +83,7 @@ namespace FBase.ApiServer.OAuth
                 canUpdate: GenerateCanManipulateFunction(requestorId),
                 fillNewValues: (originalCredentialSet) => {
                     originalCredentialSet.Name = name;
+                    originalCredentialSet.RedirectUrl = redirectUrl;
                 });
         }
 

@@ -9,6 +9,7 @@ namespace FBase.ApiServer.OAuth
         string Name { get; set; }
         string ClientId { get; set; }
         string ClientSecret { get; set; }
+        string RedirectUrl { get; set; }
         DateTime? CreatedDate { get; set; }
     }
 }

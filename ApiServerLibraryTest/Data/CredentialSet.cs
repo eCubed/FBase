@@ -11,6 +11,7 @@ namespace ApiServerLibraryTest.Data
         public string Name { get; set; }
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
+        public string RedirectUrl { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? CreatedDate { get; set; }
 

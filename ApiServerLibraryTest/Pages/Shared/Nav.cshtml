@@ -1,4 +1,8 @@
 ﻿@if(!User.Identity.IsAuthenticated)
 {
-    <a asp-page="Login">Log Inne</a>
+    <a asp-page="Login">Log In</a>
+}
+else
+{
+    <a asp-page="Log Out">Log Out</a>
 }

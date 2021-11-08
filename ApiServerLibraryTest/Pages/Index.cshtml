@@ -5,3 +5,10 @@
 <p>
     ApiServerLibraryTest 12345
 </p>
+@if(User.Identity.IsAuthenticated)
+            {
+                <p>Authenticated</p>
+            } else
+            {
+                <p>Not authenticated</p>
+            }

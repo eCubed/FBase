@@ -1,4 +1,5 @@
 using ApiServerLibraryTest.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -63,18 +64,15 @@ namespace ApiServerLibraryTest
                 .AddDefaultTokenProviders();
 
 
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+            services.AddAuthentication()
             .AddJwtBearer(options =>
             {
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = tokenValidationParameters;
-            });
+            })
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
+            
 
             services.AddCors();
             services.AddRazorPages();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiServerLibraryTest.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -48,7 +49,8 @@ namespace ApiServerLibraryTest.Pages
                 }
                 else
                 {
-                    await SignInManager.SignInAsync(user, false);
+                    await SignInManager.SignInAsync(user, false, CookieAuthenticationDefaults.AuthenticationScheme);
+
                     return Redirect("/");
                 }
             }

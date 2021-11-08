@@ -1,0 +1,19 @@
+﻿@page
+@model ApiServerLibraryTest.Pages.oauth.AuthorizeModel
+@{
+}
+
+<h1>Authorize</h1>
+
+@if (Model.ClientIdFound)
+{
+    <p>@Model.AppName wants to access your stuff</p>
+    <ul>
+        @foreach (var scope in Model.Scopes)
+        {
+            <li>@scope</li>
+        }
+    </ul>
+} else {
+    <p>Client Not Found!</p>
+}

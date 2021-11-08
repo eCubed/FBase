@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FBase.ApiServer", "FBase.Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FBase.Cryptography", "FBase.Cryptography\FBase.Cryptography.csproj", "{A6A6046E-D879-4464-A469-126DE6167BBA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiServerLibraryTest", "ApiServerLibraryTest\ApiServerLibraryTest.csproj", "{D4C74E5F-2D97-472C-AC6B-84D0E74E9678}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiServerLibraryTest", "ApiServerLibraryTest\ApiServerLibraryTest.csproj", "{D4C74E5F-2D97-472C-AC6B-84D0E74E9678}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

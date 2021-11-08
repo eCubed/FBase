@@ -34,16 +34,21 @@ namespace FBase.ApiServer.OAuth
             return GetAppStore().GetQueryableApps(userId).OrderBy(a => a.Name).ToList();
         }
 
-        public async Task<ManagerResult> CreateAsync(string name, TUserKey userId)
+        public async Task<ManagerResult<TApp>> CreateAsync(string name, TUserKey userId)
         {
             TApp app = new TApp();
             app.Name = name;
             app.UserId = userId;
 
-            return await DataUtils.CreateAsync(
+            var createRes = await DataUtils.CreateAsync(
                 entity: app,
                 store: GetAppStore(),
                 findUniqueAsync: FindUniqueAsync);
+
+            if (!createRes.Success)
+                return new ManagerResult<TApp>(createRes.Errors);
+
+            return new ManagerResult<TApp>(app);
         }
 
         public async Task<ManagerResult> UpdateAsync(long id, string name, TUserKey requestorId)

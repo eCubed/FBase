@@ -20,8 +20,9 @@ namespace ApiServerLibraryTest.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<App>().Property("CreatedDate").HasDefaultValueSql("DATE()");
-            builder.Entity<App>().Property("CreatedDate").HasDefaultValueSql("DATE()");
+            builder.Entity<App>().Property("CreatedDate").HasDefaultValueSql("GETDATE()");
+            builder.Entity<CredentialSet>().Property("CreatedDate").HasDefaultValueSql("GETDATE()");
+            builder.Entity<AppAuthorization>().HasOne(aa => aa.User).WithOne().OnDelete(DeleteBehavior.NoAction);
 
             base.OnModelCreating(builder);
         }

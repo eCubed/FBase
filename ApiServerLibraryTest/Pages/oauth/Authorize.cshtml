@@ -7,19 +7,14 @@
 
 @if (Model.ClientIdFound)
 {
-    <p>@Model.AppName wants to access your stuff</p>
-    <ul>
-        @foreach (var scope in Model.Scopes)
-        {
-            <li>@scope</li>
-        }
-    </ul>
-
-    if (!User.Identity.IsAuthenticated)
+    if(!User.Identity!.IsAuthenticated)
     {
-        <p>You are authenticated!!!!</p>
+        <p>Log In To Proceed</p>
+        <form method="POST" asp-page-handler="GoToLogIn">
+            <button type="submit">Log In</button>
+            <input type="hidden" name="clientId" value="@Model.ClientId" />
+        </form>
     }
-
 } else {
-    <p>Client Not Found!</p>
+    <p>@Model.ErrorMessage</p>
 }

@@ -15,8 +15,10 @@ namespace ApiServerLibraryTest.Pages.oauth
         private AppManager<App, int> AppManager { get; set; }
         
         public bool ClientIdFound { get; set; }
-        public string AppName { get; set; }
-        public List<string> Scopes { get; set; }
+        public string? AppName { get; set; }
+        public List<string>? Scopes { get; set; }
+        public string? ErrorMessage { get; set; }
+        public string? ClientId { get; set; }
 
         public AuthorizeModel(ApiServerLibraryTestDbContext context)
         {
@@ -32,9 +34,12 @@ namespace ApiServerLibraryTest.Pages.oauth
             if (credentialSet == null)
             {
                 ClientIdFound = false;
-            } else
+                ErrorMessage = "Client Not Found";
+            }
+            else
             {
                 ClientIdFound = true;
+                ClientId = clientId;
                 var app = await AppManager.FindByIdAsync(credentialSet.AppId);
                 // app can't be null!
                 AppName = app.Name;
@@ -43,6 +48,11 @@ namespace ApiServerLibraryTest.Pages.oauth
             }
 
             var dummy = 3;
+        }
+
+        public void OnPostGoToLogIn(string clientId)
+        {
+            var dummy = 5;
         }
     }
 }

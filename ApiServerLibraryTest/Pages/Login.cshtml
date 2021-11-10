@@ -1,7 +1,7 @@
 ﻿@page
 @model ApiServerLibraryTest.Pages.LoginModel
 
-@if(!User.Identity.IsAuthenticated)
+@if(!User.Identity!.IsAuthenticated)
 {
     <form method="post">
         <div>
@@ -12,6 +12,7 @@
             <label>Password</label>
             <input type="password" asp-for="@Model.Password" />
         </div>
+        <input type="hidden" asp-for="@Model.ClientId" />
         <button type="submit">Log In</button>
     </form>
 }

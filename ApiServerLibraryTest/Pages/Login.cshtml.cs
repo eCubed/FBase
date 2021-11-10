@@ -15,7 +15,10 @@ namespace ApiServerLibraryTest.Pages
         public string? Password { get; set; }
         [BindProperty]
         public string? ClientId { get; set; }
+
+        [BindProperty]
         public string? AppName { get; set; }
+        [BindProperty]
         public List<string>? Scopes { get; set; }
 
         private SignInManager<TestUser>? SignInManager { get; set; }
@@ -84,6 +87,7 @@ namespace ApiServerLibraryTest.Pages
             if (user == null)
             {
                 ViewData["ErrorMessage"] = "User does not exist";
+
                 return Page();
                 
             } 

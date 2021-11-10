@@ -13,8 +13,10 @@ namespace ApiServerLibraryTest.Pages
         public string? Username { get; set; }
         [BindProperty]
         public string? Password { get; set; }
-
+        [BindProperty]
         public string? ClientId { get; set; }
+        public string? AppName { get; set; }
+        public List<string>? Scopes { get; set; }
 
         private SignInManager<TestUser>? SignInManager { get; set; }
         private UserManager<TestUser>? UserManager { get; set; }
@@ -31,9 +33,18 @@ namespace ApiServerLibraryTest.Pages
             AppManager = new AppManager<App, int>(new AppStore(context));
         }
 
-        public void OnGet([FromQuery(Name = "client_id")] string clientId = "")
+        public async Task OnGet([FromQuery(Name = "client_id")] string clientId = "")
         {
             ClientId = clientId;
+            if(!string.IsNullOrEmpty(clientId))
+            {
+                CredentialSet credentialSet = await CredentialSetManager!.FindByClientIdAsync(clientId);
+                App app = await AppManager!.FindByIdAsync(credentialSet!.AppId);
+                AppName = app.Name;
+                Scopes = AppManager.GetScopes(credentialSet!.AppId);
+            }
+            
+
         }
 
         private async Task<IActionResult> ManageAuthorizationAsync(string clientId, TestUser user)
@@ -62,8 +73,7 @@ namespace ApiServerLibraryTest.Pages
                 }
 
                 // Still need to create the authorization code record!
-
-                return Redirect($"{credentialSet.RedirectUrl}?auth_code=ABCDEFG");
+                return Redirect($"{credentialSet.RedirectUrl}?code=ABCDEFG");
             }
         }
 

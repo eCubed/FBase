@@ -3,6 +3,16 @@
 
 @if(!User.Identity!.IsAuthenticated)
 {
+    @if (!string.IsNullOrEmpty(Model.AppName))
+    {
+        <p>@Model.AppName wants to access your info.</p>
+        @foreach(string scope in Model.Scopes!)
+        {
+            <p>@scope</p>
+        }
+        <p>Log In to authorize the app.</p>
+    }
+
     <form method="post">
         <div>
             <label>Username</label>

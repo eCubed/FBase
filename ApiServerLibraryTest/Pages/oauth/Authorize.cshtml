@@ -14,6 +14,7 @@
         <form method="POST" asp-page-handler="GoToLogIn">
             <button type="submit">Log In</button>
             <input type="hidden" name="clientId" value="@Model.ClientId" />
+            <input type="hidden" name="codeChallenge" value="@Model.CodeChallenge" />
         </form>
     } 
     else

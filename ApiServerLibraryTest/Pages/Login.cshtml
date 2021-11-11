@@ -14,6 +14,7 @@
             <input type="password" asp-for="@Model.Password" />
         </div>
         <input type="hidden" asp-for="@Model.ClientId" />
+        <input type="hidden" asp-for="@Model.CodeChallenge" />
        
         <button type="submit">Log In</button>
         <p>@ViewData["ErrorMessage"]</p>

@@ -14,6 +14,8 @@ namespace ApiServerLibraryTest.Pages
         public string? Password { get; set; }
         [BindProperty]
         public string? ClientId { get; set; }
+        [BindProperty]
+        public string? CodeChallenge { get; set; }
 
         private SignInManager<TestUser>? SignInManager { get; set; }
         private UserManager<TestUser>? UserManager { get; set; }
@@ -24,9 +26,12 @@ namespace ApiServerLibraryTest.Pages
             UserManager = userManager;
         }
 
-        public void OnGet([FromQuery(Name = "client_id")] string clientId = "")
+        public void OnGet(
+            [FromQuery(Name = "client_id")] string clientId = "",
+            [FromQuery(Name = "code_challenge")] string codeChallenge = "")
         {
             ClientId = clientId;
+            CodeChallenge = codeChallenge;
         }
 
 
@@ -53,7 +58,7 @@ namespace ApiServerLibraryTest.Pages
                     await SignInManager!.SignInAsync(user, false, CookieAuthenticationDefaults.AuthenticationScheme);
 
                     if (!string.IsNullOrEmpty(ClientId))
-                        return Redirect($"/oauth/authorize?client_id={ClientId}");
+                        return Redirect($"/oauth/authorize?client_id={ClientId}&code_challenge={CodeChallenge}");
 
                     return Redirect("/");
                 }

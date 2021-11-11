@@ -100,9 +100,9 @@ namespace ApiServerLibraryTest.Pages.oauth
             }
         }
 
-        public IActionResult OnPostGoToLogIn(string clientId)
+        public IActionResult OnPostGoToLogIn(string clientId, string codeChallenge)
         {
-            return Redirect($"/Login?client_id={clientId}");
+            return Redirect($"/Login?client_id={clientId}&code_challenge={codeChallenge}");
         }
 
         public async Task<IActionResult> OnPostAuthorize(int userId, long appId, string redirectUrl, string codeChallenge)

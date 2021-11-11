@@ -3,15 +3,6 @@
 
 @if(!User.Identity!.IsAuthenticated)
 {
-    @if (!string.IsNullOrEmpty(Model.AppName))
-    {
-        <p>@Model.AppName wants to access your info.</p>
-        @foreach(string scope in Model.Scopes!)
-        {
-            <p>@scope</p>
-        }
-        <p>Log In to authorize the app.</p>
-    }
 
     <form method="post">
         <div>
@@ -23,11 +14,7 @@
             <input type="password" asp-for="@Model.Password" />
         </div>
         <input type="hidden" asp-for="@Model.ClientId" />
-        <input type="hidden" asp-for="@Model.AppName" />
-        @for(int i = 0; i < Model.Scopes!.Count; i++)
-        {
-            <input type="hidden" asp-for="@Model.Scopes[i]" />
-        }
+       
         <button type="submit">Log In</button>
         <p>@ViewData["ErrorMessage"]</p>
     </form>

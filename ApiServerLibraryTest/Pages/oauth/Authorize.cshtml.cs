@@ -17,7 +17,6 @@ namespace ApiServerLibraryTest.Pages.oauth
         private AppAuthorizationManager<AppAuthorization, int>? AppAuthorizationManager { get; set; }
         private UserManager<TestUser>? UserManager { get; set; }
         
-        public bool ClientIdFound { get; set; }
         public string? AppName { get; set; }
         public List<string>? Scopes { get; set; }
         public string? ErrorMessage { get; set; }
@@ -41,16 +40,15 @@ namespace ApiServerLibraryTest.Pages.oauth
 
             if (credentialSet == null)
             {
-                ClientIdFound = false;
                 ErrorMessage = "Client Not Found";
                 return Page();
             }
             else
             {
-                ClientIdFound = true;
                 ClientId = clientId;
                 RedirectUrl = credentialSet.RedirectUrl;
                 var app = await AppManager!.FindByIdAsync(credentialSet.AppId);
+                AppName = app.Name;
 
                 if (User.Identity!.IsAuthenticated)
                 {
@@ -66,7 +64,6 @@ namespace ApiServerLibraryTest.Pages.oauth
                     }
                     else
                     {
-                        AppName = app.Name;
                         Scopes = AppManager.GetScopes(app.Id);
                         UserId = user.Id;
                         AppId = app.Id;

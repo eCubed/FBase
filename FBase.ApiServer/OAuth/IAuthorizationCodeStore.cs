@@ -8,7 +8,8 @@ namespace FBase.ApiServer.OAuth
         where TAuthorizationCode : class, IAuthorizationCode<TUserKey>
         where TUserKey: IEquatable<TUserKey>
     {
-        Task<TAuthorizationCode> FindByCodeAsync(string code);
+#nullable enable
+        Task<TAuthorizationCode?> FindByCodeAsync(string code);
         Task DeleteAllExpiredBeforeAsync(DateTime expiredBeforeDate);
     }
 }

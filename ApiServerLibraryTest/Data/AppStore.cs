@@ -24,7 +24,7 @@ namespace ApiServerLibraryTest.Data
             await db.SaveChangesAsync();
         }
 
-        public async Task<App> FindByNameAsync(string name)
+        public async Task<App?> FindByNameAsync(string name)
         {
             return await db.Set<App>().SingleOrDefaultAsync(a => a.Name == name);
         }
@@ -34,7 +34,7 @@ namespace ApiServerLibraryTest.Data
             return db.Set<App>().Where(a => a.UserId == userId).AsQueryable();
         }
 
-        public IQueryable<IScope> GetQueryableScopes(long? appId = null)
+        public IQueryable<IScope?> GetQueryableScopes(long? appId = null)
         {
             return (appId.HasValue) 
                 ? db.Set<ScopeApp>().Include(sa => sa.Scope).Where(sa => sa.AppId == appId).Select(sa => sa.Scope) 
@@ -43,7 +43,7 @@ namespace ApiServerLibraryTest.Data
 
         public async Task RemoveScopeFromAppAsync(int scopeId, long appId)
         {
-            ScopeApp scopeApp = await db.Set<ScopeApp>().SingleOrDefaultAsync(sa => sa.ScopeId == scopeId && sa.AppId == appId);
+            ScopeApp? scopeApp = await db.Set<ScopeApp>().SingleOrDefaultAsync(sa => sa.ScopeId == scopeId && sa.AppId == appId);
 
             if (scopeApp != null)
             {

@@ -17,7 +17,7 @@ namespace ApiServerLibraryTest.Pages
 
         public async Task<IActionResult> OnGetAsync()
         {
-            if(User.Identity.IsAuthenticated)
+            if(User.Identity!.IsAuthenticated)
             {
                 await SignInManager.SignOutAsync();
                 return Redirect("/");

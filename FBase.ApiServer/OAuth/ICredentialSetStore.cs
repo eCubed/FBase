@@ -9,9 +9,11 @@ namespace FBase.ApiServer.OAuth
         where TCredentialSet : class, ICredentialSet
     {
         IQueryable<TCredentialSet> GetQueryableCredentialSets();
-        Task<TCredentialSet> FindAsync(string name, long appId);
-        Task<TCredentialSet> FindByClientIdAsync(string clientId);
-
-        Task<IApp<TUserKey>> FindAppAsync<TUserKey>(long appId) where TUserKey : IEquatable<TUserKey>;
+#nullable enable
+        Task<TCredentialSet?> FindAsync(string name, long appId);
+#nullable enable
+        Task<TCredentialSet?> FindByClientIdAsync(string clientId);
+#nullable enable
+        Task<IApp<TUserKey>?> FindAppAsync<TUserKey>(long appId) where TUserKey : IEquatable<TUserKey>;
     }
 }

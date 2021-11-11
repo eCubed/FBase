@@ -24,12 +24,13 @@ namespace FBase.ApiServer.OAuth
             return await GetAuthorizationCodeStore().FindByCodeAsync(code);
         }
 
-        public async Task<ManagerResult<TAuthorizationCode>> CreateAsync(string codeChallenge, TUserKey userId)
+        public async Task<ManagerResult<TAuthorizationCode>> CreateAsync(string codeChallenge, TUserKey userId, long appId)
         {
             TAuthorizationCode authorizationCode = new TAuthorizationCode
             {
                 CodeChallenge = codeChallenge,
                 UserId = userId,
+                AppId = appId,
                 Code = Randomizer.GenerateString(Randomizer.GenerateRandomInteger(8, 10), "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjklmnopqrstuvwxyz0123456789") + "-" +
                        Randomizer.GenerateString(Randomizer.GenerateRandomInteger(11, 17), "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjklmnopqrstuvwxyz0123456789")
             };
@@ -45,22 +46,22 @@ namespace FBase.ApiServer.OAuth
         }
 
 
-        public async Task<ManagerResult> ValidateAsync(string code, string codeVerifier, int gracePeriodInMinutes = 5)
+        public async Task<ManagerResult<TAuthorizationCode>> ValidateAsync(string code, string codeVerifier, int gracePeriodInMinutes = 5)
         {
             TAuthorizationCode authorizationCode = await GetAuthorizationCodeStore().FindByCodeAsync(code);
 
             if (authorizationCode == null)
-                return new ManagerResult(ApiServerMessages.InvalidAuthorizationCode);
+                return new ManagerResult<TAuthorizationCode>(ApiServerMessages.InvalidAuthorizationCode);
 
-            if (authorizationCode.CreatedDate.Value.AddMinutes(gracePeriodInMinutes) < DateTime.UtcNow)
-                return new ManagerResult(ApiServerMessages.ExpiredAuthorizationCode);
+            if (authorizationCode.CreatedDate.Value.AddMinutes(gracePeriodInMinutes) < DateTime.Now)
+                return new ManagerResult<TAuthorizationCode>(ApiServerMessages.ExpiredAuthorizationCode);
 
-            if (!Hasher.CheckHash(codeVerifier, authorizationCode.CodeChallenge, Hasher.HashType.SHA256))
-                return new ManagerResult(ApiServerMessages.InvalidCodeVerifier);
+            if (!PckeUtils.Check(codeVerifier, authorizationCode.CodeChallenge))
+                return new ManagerResult<TAuthorizationCode>(ApiServerMessages.InvalidCodeVerifier);
 
             await GetAuthorizationCodeStore().DeleteAsync(authorizationCode);
 
-            return new ManagerResult();
+            return new ManagerResult<TAuthorizationCode>(authorizationCode);
         }
 
         public async Task DeleteAllExpiredAsync(int gracePeriodInMinutes = 5)

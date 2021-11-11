@@ -1,6 +1,8 @@
 ﻿using ApiServerLibraryTest.Data;
 using ApiServerLibraryTest.Models;
 using FBase.ApiServer;
+using FBase.ApiServer.OAuth;
+using FBase.Cryptography;
 using FBase.Foundations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +23,14 @@ namespace ApiServerLibraryTest.Controllers
         public ValuesController(UserManager<TestUser> userManager)
         {
             UserManager = userManager;
+        }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            string challenge = PckeUtils.GenerateCodeChallengeFromValidCodeVerifier("abcdefg");
+
+            return Ok(challenge);
         }
         
         [HttpGet("protected")]

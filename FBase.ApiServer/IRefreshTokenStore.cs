@@ -8,6 +8,7 @@ namespace FBase.ApiServer
        where TRefreshToken : class, IRefreshToken<TUserKey>
        where TUserKey : IEquatable<TUserKey>
     {
-        Task<TRefreshToken> FindByTokenAsync(string token);
+#nullable enable
+        Task<TRefreshToken?> FindByTokenAsync(string token);
     }
 }

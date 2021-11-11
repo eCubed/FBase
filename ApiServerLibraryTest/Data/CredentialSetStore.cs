@@ -14,22 +14,22 @@ namespace ApiServerLibraryTest.Data
         {
         }
 
-        public Task<IApp<TUserKey>> FindAppAsync<TUserKey>(long appId) where TUserKey : IEquatable<TUserKey>
+        public Task<IApp<TUserKey>?> FindAppAsync<TUserKey>(long appId) where TUserKey : IEquatable<TUserKey>
         {
             throw new NotImplementedException();
         }
 
-        public async Task<CredentialSet> FindAsync(string name, long appId)
+        public async Task<CredentialSet?> FindAsync(string name, long appId)
         {
             return await db.Set<CredentialSet>().SingleOrDefaultAsync(cs => cs.Name == name && cs.AppId == appId);
         }
 
-        public async Task<CredentialSet> FindByClientIdAsync(string clientId)
+        public async Task<CredentialSet?> FindByClientIdAsync(string clientId)
         {
             return await db.Set<CredentialSet>().SingleOrDefaultAsync(cs => cs.ClientId == clientId);
         }
 
-        public async Task<IApp<int>> FindAppAsync(long appId)
+        public async Task<IApp<int>?> FindAppAsync(long appId)
         {
             return await db.Set<App>().SingleOrDefaultAsync(a => a.Id == appId);
         }

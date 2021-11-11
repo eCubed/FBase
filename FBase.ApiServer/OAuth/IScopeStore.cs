@@ -8,6 +8,7 @@ namespace FBase.ApiServer.OAuth
         where TScope : class, IScope
     {
         IQueryable<TScope> GetQueryableScopes();
-        Task<TScope> FindByNameAsync(string name);
+#nullable enable
+        Task<TScope?> FindByNameAsync(string name);
     }
 }

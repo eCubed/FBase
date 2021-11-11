@@ -9,9 +9,10 @@ namespace FBase.ApiServer.OAuth
         where TApp : class, IApp<TUserKey>
         where TUserKey : IEquatable<TUserKey>
     {
-        Task<TApp> FindByNameAsync(string name);
+#nullable enable
+        Task<TApp?> FindByNameAsync(string name);
         IQueryable<TApp> GetQueryableApps(TUserKey userId);
-        IQueryable<IScope> GetQueryableScopes(long? appId = null);
+        IQueryable<IScope?> GetQueryableScopes(long? appId = null);
         Task AddScopeToAppAsync(int scopeId, long appId);
         Task RemoveScopeFromAppAsync(int scopeId, long appId);
     }

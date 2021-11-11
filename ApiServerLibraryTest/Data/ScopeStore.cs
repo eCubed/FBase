@@ -12,7 +12,7 @@ namespace ApiServerLibraryTest.Data
         {
         }
 
-        public async Task<Scope> FindByNameAsync(string name)
+        public async Task<Scope?> FindByNameAsync(string name)
         {
             return await db.Set<Scope>().SingleOrDefaultAsync(s => s.Name == name);
         }

@@ -15,12 +15,14 @@ namespace ApiServerLibraryTest.Pages.oauth
         private CredentialSetManager<CredentialSet>? CredentialSetManager { get; set; }
         private AppManager<App, int>? AppManager { get; set; }
         private AppAuthorizationManager<AppAuthorization, int>? AppAuthorizationManager { get; set; }
+        private AuthorizationCodeManager<AuthorizationCode, int>? AuthorizationCodeManager { get; set; }
         private UserManager<TestUser>? UserManager { get; set; }
         
         public string? AppName { get; set; }
         public List<string>? Scopes { get; set; }
         public string? ErrorMessage { get; set; }
         public string? ClientId { get; set; }
+        public string? CodeChallenge { get; set; }
         public string? RedirectUrl { get; set; }
         public long? AppId { get; set; }
         public int? UserId { get; set; }
@@ -31,10 +33,28 @@ namespace ApiServerLibraryTest.Pages.oauth
             CredentialSetManager = new CredentialSetManager<CredentialSet>(new CredentialSetStore(context));
             AppManager = new AppManager<App, int>(new AppStore(context));
             AppAuthorizationManager = new AppAuthorizationManager<AppAuthorization, int>(new AppAuthorizationStore(context));
+            AuthorizationCodeManager = new AuthorizationCodeManager<AuthorizationCode, int>(new AuthorizationCodeStore(context));
             UserManager = userManager;
         }
 
-        public async Task<IActionResult> OnGet([FromQuery(Name = "client_id")] string clientId = "")
+        private async Task<IActionResult> ProcessAndRedirectWithAuthCode(int userId, string codeChallenge, long appId, string redirectUrl)
+        {
+            var createRes = await AuthorizationCodeManager!.CreateAsync(codeChallenge, userId, appId);
+
+            if (!createRes.Success)
+            {
+                ErrorMessage = "Authorization Code creation failed";
+                return Page();
+            }
+
+            var authorizationCode = createRes.Data;
+
+            return Redirect($"{redirectUrl}?code={authorizationCode.Code}");
+        }
+
+        public async Task<IActionResult> OnGet(
+            [FromQuery(Name = "client_id")] string clientId = "",
+            [FromQuery(Name = "code_challenge")] string codeChallenge = "")
         {
             var credentialSet = await CredentialSetManager!.FindByClientIdAsync(clientId);
 
@@ -46,6 +66,7 @@ namespace ApiServerLibraryTest.Pages.oauth
             else
             {
                 ClientId = clientId;
+                CodeChallenge = codeChallenge;
                 RedirectUrl = credentialSet.RedirectUrl;
                 var app = await AppManager!.FindByIdAsync(credentialSet.AppId);
                 AppName = app.Name;
@@ -59,8 +80,9 @@ namespace ApiServerLibraryTest.Pages.oauth
                     if (appAuthorization != null)
                     {
                         UserHasAlreadyAuthorizedApp = true;
-                        // Generate authorization code, then redirect with auth code and other query parameters
-                        return Redirect($"{RedirectUrl}?code=ABCDEFG");
+
+                        // return Redirect($"{RedirectUrl}?code=ABCDEFG");
+                        return await ProcessAndRedirectWithAuthCode(user.Id, CodeChallenge, app.Id, credentialSet.RedirectUrl!);
                     }
                     else
                     {
@@ -83,7 +105,7 @@ namespace ApiServerLibraryTest.Pages.oauth
             return Redirect($"/Login?client_id={clientId}");
         }
 
-        public async Task<IActionResult> OnPostAuthorize(int userId, long appId, string redirectUrl)
+        public async Task<IActionResult> OnPostAuthorize(int userId, long appId, string redirectUrl, string codeChallenge)
         {
             var res = await AppAuthorizationManager!.AuthorizeAsync(appId, userId);
 
@@ -94,7 +116,8 @@ namespace ApiServerLibraryTest.Pages.oauth
             }
 
             // Create the authorization code later
-            return Redirect($"{redirectUrl}?code=ABCDEFG");
+            return await ProcessAndRedirectWithAuthCode(userId, codeChallenge, appId, redirectUrl);
         }
+
     }
 }

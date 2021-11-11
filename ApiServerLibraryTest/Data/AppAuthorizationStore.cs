@@ -1,6 +1,7 @@
 ﻿using FBase.ApiServer.OAuth;
 using FBase.DotNetCore.EntityFramework;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,7 +25,7 @@ namespace ApiServerLibraryTest.Data
             await db.SaveChangesAsync();
         }
 
-        public async Task<AppAuthorization> FindUniqueAsync(long appId, int userId)
+        public async Task<AppAuthorization?> FindUniqueAsync(long appId, int userId)
         {
             return await db.Set<AppAuthorization>().SingleOrDefaultAsync(aa => aa.AppId == appId && aa.UserId == userId);
         }
@@ -37,11 +38,11 @@ namespace ApiServerLibraryTest.Data
         public IQueryable<IScope> GetQueryableAppAuthorizationScopes(long? appAuthorizationId = null)
         {
             return (appAuthorizationId.HasValue)
-              ? db.Set<ScopeAppAuthorization>().Include(sa => sa.Scope).Where(sa => sa.AppAuthorizationId == appAuthorizationId).Select(sa => sa.Scope)
+              ? db.Set<ScopeAppAuthorization>().Include(sa => sa.Scope!).Where(sa => sa.AppAuthorizationId == appAuthorizationId).Select(sa => sa.Scope!)
               : db.Set<Scope>().AsQueryable();
         }
 
-        public IQueryable<IScope> GetQueryableAppScopes(long? appId)
+        public IQueryable<IScope?> GetQueryableAppScopes(long? appId)
         {
             return (appId.HasValue)
                ? db.Set<ScopeApp>().Include(sa => sa.Scope).Where(sa => sa.AppId == appId).Select(sa => sa.Scope)

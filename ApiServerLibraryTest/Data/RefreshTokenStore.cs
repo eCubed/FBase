@@ -11,7 +11,7 @@ namespace ApiServerLibraryTest.Data
         {
         }
 
-        public async Task<RefreshToken> FindByTokenAsync(string token)
+        public async Task<RefreshToken?> FindByTokenAsync(string token)
         {
             return await db.Set<RefreshToken>().SingleOrDefaultAsync(rt => rt.Token == token);
         }

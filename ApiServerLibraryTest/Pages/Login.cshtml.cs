@@ -24,7 +24,7 @@ namespace ApiServerLibraryTest.Pages
             UserManager = userManager;
         }
 
-        public async Task OnGet([FromQuery(Name = "client_id")] string clientId = "")
+        public void OnGet([FromQuery(Name = "client_id")] string clientId = "")
         {
             ClientId = clientId;
         }

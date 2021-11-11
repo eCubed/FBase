@@ -5,14 +5,15 @@ namespace ApiServerLibraryTest.Data
 {
     public class ApiServerLibraryTestDbContext : IdentityDbContext<TestUser, TestRole, int>
     {
-        public DbSet<App> Apps { get; set; }
-        public DbSet<AppAuthorization> AppAuthorizations { get; set; }
-        public DbSet<CredentialSet> CredentialSets { get; set; }
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
-        public DbSet<Scope> Scopes { get; set; }
-        public DbSet<ScopeApp> ScopeApps { get; set; }
+        public DbSet<App>? Apps { get; set; }
+        public DbSet<AppAuthorization>? AppAuthorizations { get; set; }
+        public DbSet<AuthorizationCode>? AuthorizationCodes { get; set; }
+        public DbSet<CredentialSet>? CredentialSets { get; set; }
+        public DbSet<RefreshToken>? RefreshTokens { get; set; }
+        public DbSet<Scope>? Scopes { get; set; }
+        public DbSet<ScopeApp>? ScopeApps { get; set; }
 
-        public DbSet<ScopeAppAuthorization> ScopeAppAuthorizations { get; set; }
+        public DbSet<ScopeAppAuthorization>? ScopeAppAuthorizations { get; set; }
 
         public ApiServerLibraryTestDbContext(DbContextOptions<ApiServerLibraryTestDbContext> options) : base(options)
         {
@@ -22,7 +23,9 @@ namespace ApiServerLibraryTest.Data
         {
             builder.Entity<App>().Property("CreatedDate").HasDefaultValueSql("GETDATE()");
             builder.Entity<CredentialSet>().Property("CreatedDate").HasDefaultValueSql("GETDATE()");
-            builder.Entity<AppAuthorization>().HasOne(aa => aa.User).WithOne().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<AppAuthorization>().HasOne(aa => aa.User).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<AuthorizationCode>().Property("CreatedDate").HasDefaultValueSql("GETDATE()");
+            builder.Entity<AuthorizationCode>().HasOne(ac => ac.User).WithMany().OnDelete(DeleteBehavior.NoAction);
 
             base.OnModelCreating(builder);
         }

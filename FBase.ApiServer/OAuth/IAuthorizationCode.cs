@@ -8,6 +8,7 @@ namespace FBase.ApiServer.OAuth
     {
         string Code { get; set; }
         TUserKey UserId { get; set; }
+        long AppId { get; set; }
         string CodeChallenge { get; set; }
         DateTime? CreatedDate { get; set; }
 

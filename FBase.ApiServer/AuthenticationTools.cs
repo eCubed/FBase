@@ -1,4 +1,5 @@
-﻿using FBase.Foundations;
+﻿using FBase.ApiServer.OAuth;
+using FBase.Foundations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -48,7 +49,7 @@ namespace FBase.ApiServer
                 issuer: config.Issuer,
                 audience: config.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(1),
+                expires: DateTime.UtcNow.AddMinutes(5),
                 signingCredentials: new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256)
             );
 
@@ -112,6 +113,21 @@ namespace FBase.ApiServer
             var refreshToken = await refreshTokenManager.FindByTokenAsync(refreshTokenRequest.RefreshToken);
             var user = await userManager.FindByIdAsync(refreshToken.UserId.ToString());
 
+            Func<TUser, List<Claim>> addAdditionalClaimsIncludingAppIdIfAny = (user) => {
+                List<Claim> claims = new List<Claim>();
+                if (addAdditionalClaims != null)
+                    claims.AddRange(addAdditionalClaims.Invoke(user));
+
+                JwtSecurityToken jwtSecurityToken = jwtTokenHandler.ReadJwtToken(refreshTokenRequest.Token);
+
+                Claim appIdClaim = jwtSecurityToken.Claims.SingleOrDefault(c => c.Type == OAuthClaimTypes.ApplicationId);
+                if (appIdClaim != null)
+                {
+                    claims.Add(appIdClaim);
+                }
+                return claims;
+            };
+
             try
             {
                 var tokenCheckResult = jwtTokenHandler.ValidateToken(
@@ -125,7 +141,7 @@ namespace FBase.ApiServer
                         refreshTokenManager: refreshTokenManager,
                         user: user,
                         refreshToken: refreshToken,
-                        addAdditionalClaims: addAdditionalClaims);
+                        addAdditionalClaims: addAdditionalClaimsIncludingAppIdIfAny);
             }
             catch (SecurityTokenException)
             {
@@ -137,7 +153,7 @@ namespace FBase.ApiServer
                         refreshTokenManager: refreshTokenManager,
                         user: user,
                         refreshToken: refreshToken,
-                        addAdditionalClaims: addAdditionalClaims);
+                        addAdditionalClaims: addAdditionalClaimsIncludingAppIdIfAny);
                 }
                 else
                 {
@@ -147,7 +163,7 @@ namespace FBase.ApiServer
                         refreshTokenManager: refreshTokenManager,
                         user: user,
                         refreshToken: null,
-                        addAdditionalClaims: addAdditionalClaims);
+                        addAdditionalClaims: addAdditionalClaimsIncludingAppIdIfAny);
                 }
             }
         }

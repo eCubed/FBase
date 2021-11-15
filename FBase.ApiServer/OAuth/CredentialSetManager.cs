@@ -6,16 +6,17 @@ using System.Threading.Tasks;
 
 namespace FBase.ApiServer.OAuth
 {
-    public class CredentialSetManager<TCredentialSet> : ManagerBase<TCredentialSet, long>
+    public class CredentialSetManager<TCredentialSet, TUserKey> : ManagerBase<TCredentialSet, long>
         where TCredentialSet : class, ICredentialSet, new()
+        where TUserKey : IEquatable<TUserKey>
     {
-        public CredentialSetManager(ICredentialSetStore<TCredentialSet> store) : base(store)
+        public CredentialSetManager(ICredentialSetStore<TCredentialSet, TUserKey> store) : base(store)
         {
         }
 
-        private ICredentialSetStore<TCredentialSet> GetCredentialSetStore()
+        private ICredentialSetStore<TCredentialSet, TUserKey> GetCredentialSetStore()
         {
-            return (ICredentialSetStore<TCredentialSet>)Store;
+            return (ICredentialSetStore<TCredentialSet, TUserKey>)Store;
         }
 
         public async Task<TCredentialSet> FindAsync(string name, long appId)
@@ -55,12 +56,11 @@ namespace FBase.ApiServer.OAuth
                 findUniqueAsync: FindUniqueAsync);
         }
 
-        private Func<TCredentialSet, ManagerResult> GenerateCanManipulateFunction<TUserKey>(TUserKey requestorId)
-            where TUserKey : IEquatable<TUserKey>
+        private Func<TCredentialSet, ManagerResult> GenerateCanManipulateFunction(TUserKey requestorId)
         {
             return (credentialSet) =>
             {
-                var app = GetCredentialSetStore().FindAppAsync<TUserKey>(credentialSet.AppId).Result;
+                var app = GetCredentialSetStore().FindAppAsync(credentialSet.AppId).Result;
 
                 if (app == null)
                     return new ManagerResult(ApiServerMessages.CredentialSetNotFound);
@@ -73,8 +73,7 @@ namespace FBase.ApiServer.OAuth
             
         }
 
-        public async Task<ManagerResult> UpdateAsync<TUserKey>(long id, string name, string redirectUrl, TUserKey requestorId)
-            where TUserKey: IEquatable<TUserKey>
+        public async Task<ManagerResult> UpdateAsync(long id, string name, string redirectUrl, TUserKey requestorId)
         {
             return await DataUtils.UpdateAsync(
                 id: id,
@@ -87,8 +86,7 @@ namespace FBase.ApiServer.OAuth
                 });
         }
 
-        public async Task<ManagerResult> UpdateAsync<TUserKey>(long id, TUserKey requestorId, ICredentialValuesProvider credentialValuesProvider = null)
-            where TUserKey : IEquatable<TUserKey>
+        public async Task<ManagerResult> UpdateAsync(long id, TUserKey requestorId, ICredentialValuesProvider credentialValuesProvider = null)
         {
             credentialValuesProvider = credentialValuesProvider ?? new DummyCredentialValuesProvider();
 
@@ -104,8 +102,7 @@ namespace FBase.ApiServer.OAuth
                 });
         }
 
-        public async Task<ManagerResult> DeleteAsync<TUserKey>(long id, TUserKey requestorId)
-            where TUserKey : IEquatable<TUserKey>
+        public async Task<ManagerResult> DeleteAsync(long id, TUserKey requestorId)
         {
             return await DataUtils.DeleteAsync(
                 id: id,

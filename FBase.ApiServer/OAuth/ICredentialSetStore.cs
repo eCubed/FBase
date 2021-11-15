@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace FBase.ApiServer.OAuth
 {
-    public interface ICredentialSetStore<TCredentialSet> : IAsyncStore<TCredentialSet, long>
+    public interface ICredentialSetStore<TCredentialSet, TUserKey> : IAsyncStore<TCredentialSet, long>
         where TCredentialSet : class, ICredentialSet
+        where TUserKey : IEquatable<TUserKey>
     {
         IQueryable<TCredentialSet> GetQueryableCredentialSets();
 #nullable enable
@@ -14,6 +15,6 @@ namespace FBase.ApiServer.OAuth
 #nullable enable
         Task<TCredentialSet?> FindByClientIdAsync(string clientId);
 #nullable enable
-        Task<IApp<TUserKey>?> FindAppAsync<TUserKey>(long appId) where TUserKey : IEquatable<TUserKey>;
+        Task<IApp<TUserKey>?> FindAppAsync(long appId);
     }
 }

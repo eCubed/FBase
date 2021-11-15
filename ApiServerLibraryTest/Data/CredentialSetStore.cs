@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace ApiServerLibraryTest.Data
 {
-    public class CredentialSetStore : EntityStoreBase<CredentialSet, long>, ICredentialSetStore<CredentialSet>
+    public class CredentialSetStore<TUserKey> : EntityStoreBase<CredentialSet, long>, ICredentialSetStore<CredentialSet, TUserKey>
+        where TUserKey : IEquatable<TUserKey>
     {
         public CredentialSetStore(ApiServerLibraryTestDbContext context) : base(context)
         {
         }
 
-        public Task<IApp<TUserKey>?> FindAppAsync<TUserKey>(long appId) where TUserKey : IEquatable<TUserKey>
+        public Task<IApp<TUserKey>?> FindAppAsync(long appId)
         {
             throw new NotImplementedException();
         }
@@ -27,11 +28,6 @@ namespace ApiServerLibraryTest.Data
         public async Task<CredentialSet?> FindByClientIdAsync(string clientId)
         {
             return await db.Set<CredentialSet>().SingleOrDefaultAsync(cs => cs.ClientId == clientId);
-        }
-
-        public async Task<IApp<int>?> FindAppAsync(long appId)
-        {
-            return await db.Set<App>().SingleOrDefaultAsync(a => a.Id == appId);
         }
 
         public IQueryable<CredentialSet> GetQueryableCredentialSets()

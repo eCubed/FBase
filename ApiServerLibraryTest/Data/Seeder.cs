@@ -1,4 +1,5 @@
-﻿using FBase.ApiServer.OAuth;
+﻿using FBase.ApiServer.EntityFramework;
+using FBase.ApiServer.OAuth;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,8 +13,8 @@ namespace ApiServerLibraryTest.Data
         private RoleManager<TestRole> RM { get; set; }
 
         private ScopeManager<Scope> ScopeManager { get; set; }
-        private AppManager<App, int> AppManager { get; set; }
-        private CredentialSetManager<CredentialSet> CredentialSetManager { get; set; }
+        private AppManager<App<TestUser, int>, int> AppManager { get; set; }
+        private CredentialSetManager<CredentialSet<TestUser, int>, int> CredentialSetManager { get; set; }
 
         public Seeder(ApiServerLibraryTestDbContext context, UserManager<TestUser> userManager,
            RoleManager<TestRole> roleManager)
@@ -22,8 +23,8 @@ namespace ApiServerLibraryTest.Data
             UM = userManager;
             RM = roleManager;
             ScopeManager = new ScopeManager<Scope>(new ScopeStore(context));
-            AppManager = new AppManager<App, int>(new AppStore(context));
-            CredentialSetManager = new CredentialSetManager<CredentialSet>(new CredentialSetStore(context));
+            AppManager = new AppManager<App<TestUser, int>, int>(new AppStore<TestUser, int>(context));
+            CredentialSetManager = new CredentialSetManager<CredentialSet<TestUser, int>, int>(new CredentialSetStore<TestUser, int>(context));
         }
 
         public async Task CreateRolesAsync()
@@ -87,7 +88,7 @@ namespace ApiServerLibraryTest.Data
 
         public async Task CreateAppAsync(string name)
         {
-            App app = await AppManager.FindByNameAsync(name);
+            App<TestUser, int> app = await AppManager.FindByNameAsync(name);
 
             if (app == null)
             {

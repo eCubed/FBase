@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ApiServerLibraryTest.Data;
+using FBase.ApiServer.EntityFramework;
 using FBase.ApiServer.OAuth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +9,11 @@ namespace ApiServerLibraryTest.Pages.oauth
 {
     public class AuthorizeModel : PageModel
     {
-        private CredentialSetManager<CredentialSet>? CredentialSetManager { get; set; }
-        private AppManager<App, int>? AppManager { get; set; }
-        private AppAuthorizationManager<AppAuthorization, int>? AppAuthorizationManager { get; set; }
-        private AuthorizationCodeManager<AuthorizationCode, int>? AuthorizationCodeManager { get; set; }
-        private UserManager<TestUser>? UserManager { get; set; }
+        private CredentialSetManager<CredentialSet<TestUser, int>, int> CredentialSetManager { get; set; }
+        private AppManager<App<TestUser, int>, int>? AppManager { get; set; }
+        private AppAuthorizationManager<AppAuthorization<TestUser, int>, int> AppAuthorizationManager { get; set; }
+        private AuthorizationCodeManager<AuthorizationCode<TestUser, int>, int> AuthorizationCodeManager { get; set; }
+        private UserManager<TestUser> UserManager { get; set; }
         
         public string? AppName { get; set; }
         public List<string>? Scopes { get; set; }
@@ -30,10 +27,10 @@ namespace ApiServerLibraryTest.Pages.oauth
 
         public AuthorizeModel(ApiServerLibraryTestDbContext context, UserManager<TestUser> userManager)
         {
-            CredentialSetManager = new CredentialSetManager<CredentialSet>(new CredentialSetStore(context));
-            AppManager = new AppManager<App, int>(new AppStore(context));
-            AppAuthorizationManager = new AppAuthorizationManager<AppAuthorization, int>(new AppAuthorizationStore(context));
-            AuthorizationCodeManager = new AuthorizationCodeManager<AuthorizationCode, int>(new AuthorizationCodeStore(context));
+            CredentialSetManager = new CredentialSetManager<CredentialSet<TestUser, int>, int>(new CredentialSetStore<TestUser, int>(context));
+            AppManager = new AppManager<App<TestUser, int>, int>(new AppStore<TestUser, int>(context));
+            AppAuthorizationManager = new AppAuthorizationManager<AppAuthorization<TestUser, int>, int>(new AppAuthorizationStore<TestUser, int>(context));
+            AuthorizationCodeManager = new AuthorizationCodeManager<AuthorizationCode<TestUser, int>, int>(new AuthorizationCodeStore<TestUser, int>(context));
             UserManager = userManager;
         }
 

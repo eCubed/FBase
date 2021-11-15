@@ -20,7 +20,7 @@ namespace FBase.ApiServer.EntityFramework
 
         public DbSet<ScopeAppAuthorization<TUser, TUserKey>> ScopeAppAuthorizations { get; set; }
 
-        public ApiServerDbContext(DbContextOptions<ApiServerDbContext<TUser, TRole, TUserKey>> options) : base(options)
+        public ApiServerDbContext(DbContextOptions options) : base(options)
         {
         }
 

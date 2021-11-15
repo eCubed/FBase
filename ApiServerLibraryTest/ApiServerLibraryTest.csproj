@@ -21,8 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FBase.ApiServer.EntityFramework\FBase.ApiServer.EntityFramework.csproj" />
     <ProjectReference Include="..\FBase.ApiServer\FBase.ApiServer.csproj" />
-    <ProjectReference Include="..\FBase.DotNetCore.EntityFramework\FBase.DotNetCore.EntityFramework.csproj" />
   </ItemGroup>
 
   <ItemGroup>

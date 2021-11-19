@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using FBase.ApiServer.EntityFramework;
+using FBase.ApiServer.OAuth;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,12 +12,19 @@ namespace ApiServerLibraryTest.Data
         private UserManager<TestUser> UM { get; set; }
         private RoleManager<TestRole> RM { get; set; }
 
+        private ScopeManager<Scope> ScopeManager { get; set; }
+        private AppManager<App<TestUser, int>, int> AppManager { get; set; }
+        private CredentialSetManager<CredentialSet<TestUser, int>, int> CredentialSetManager { get; set; }
+
         public Seeder(ApiServerLibraryTestDbContext context, UserManager<TestUser> userManager,
            RoleManager<TestRole> roleManager)
         {
             db = context;
             UM = userManager;
             RM = roleManager;
+            ScopeManager = new ScopeManager<Scope>(new ScopeStore(context));
+            AppManager = new AppManager<App<TestUser, int>, int>(new AppStore<TestUser, int>(context));
+            CredentialSetManager = new CredentialSetManager<CredentialSet<TestUser, int>, int>(new CredentialSetStore<TestUser, int>(context));
         }
 
         public async Task CreateRolesAsync()
@@ -62,11 +71,50 @@ namespace ApiServerLibraryTest.Data
             await CreateUserAsync("user3", new List<string> { RoleNames.Subscriber });
         }
 
+        public async Task CreateScopeAsync(string name, string description)
+        {
+            Scope scope = await ScopeManager.FindByNameAsync(name);
+
+            if (scope == null)
+            {
+                await ScopeManager.CreateAsync(name, description);
+            }
+        }
+
+        public async Task CreateScopesAsync()
+        {
+            await CreateScopeAsync("http://apiserverlibrarytest/scope/email", "Scope to get the email address of a user");
+        }
+
+        public async Task CreateAppAsync(string name)
+        {
+            App<TestUser, int> app = await AppManager.FindByNameAsync(name);
+
+            if (app == null)
+            {
+                TestUser user = await UM.FindByNameAsync("user1@test123123.com");
+
+                var createRes = await AppManager.CreateAsync(name, user.Id);
+
+                if (createRes.Success)
+                {
+                    // Create Scopes
+                    await AppManager.AddScopeToAppAsync("http://apiserverlibrarytest/scope/email", createRes.Data.Id);
+
+
+                    // Create The Credentials
+                    await CredentialSetManager.CreateAsync("Native Client", createRes.Data.Id, "http://localhost:5000/accept-auth-code");
+                }
+            }
+        }
+
         public async Task InitializeDataAsync()
         {
             await db.Database.EnsureCreatedAsync();
             await CreateRolesAsync();
             await CreateUsersAsync();
+            await CreateScopesAsync();
+            await CreateAppAsync("TNT Hall of Fame");
         }
     }
 }

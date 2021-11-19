@@ -27,27 +27,6 @@ namespace FBase.ApiServer
             };
         }
 
-        public static async Task<AuthenticatedInfo<TKey>> ResolveApiClientAuthenticatedInfo<TApiClient, TKey>(
-            this ControllerBase controller,
-            IApiClientProvider<TApiClient, TKey> apiClientProvider)
-            where TApiClient : class, IApiClient<TKey>
-            where TKey: IEquatable<TKey>
-        {
-            string publicKey = controller.Request.HttpContext.User?.Claims.SingleOrDefault(c => c.Type == "abc")?.Value ?? "";
-            TApiClient apiClient = apiClientProvider.GetClientByApiKey(publicKey);
-
-            if (apiClient == null)
-                return null;
-
-            await Task.FromResult(0);
-
-            return new AuthenticatedInfo<TKey>
-            {
-                RequestorId = apiClient.Id,
-                RequestorName = apiClient.Name
-            };
-        }
-
         public static async Task<bool> IsRequestorAdminAsync<TUser, TKey>(this ControllerBase controller, 
             UserManager<TUser> userManager, string administratorRoleName = "administrator")
             where TUser : IdentityUser<TKey>

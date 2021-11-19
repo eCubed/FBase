@@ -1,0 +1,43 @@
+﻿@page
+@model ApiServerLibraryTest.Pages.oauth.AuthorizeModel
+@{
+}
+
+<h1>Authorize</h1>
+
+@if (!string.IsNullOrEmpty(Model.ClientId))
+{
+    if(!User.Identity!.IsAuthenticated)
+    {
+        <p>About to authorize @Model.AppName</p>
+        <p>Log In To Proceed</p>
+        <form method="POST" asp-page-handler="GoToLogIn">
+            <button type="submit">Log In</button>
+            <input type="hidden" name="clientId" value="@Model.ClientId" />
+            <input type="hidden" name="codeChallenge" value="@Model.CodeChallenge" />
+        </form>
+    } 
+    else
+    {
+        // Remember - user already logged in.
+        if(!Model.UserHasAlreadyAuthorizedApp)
+        {
+            <p>You are authenticated. App needs your authorization.</p>
+            <p>@Model.AppName wants to access your stuff.</p>
+            @foreach(string scope in @Model.Scopes!)
+            {
+                <p>@scope</p>
+            }
+            <form method="post" asp-page-handler="Authorize">
+                <button type="submit">Authorize</button>
+                <input type="hidden" name="userId" value="@Model.UserId" />
+                <input type="hidden" name="appId" value="@Model.AppId" />
+                <input type="hidden" name="redirectUrl" value="@Model.RedirectUrl" />
+                <input type="hidden" name="codeChallenge" value="@Model.CodeChallenge" />
+            </form>
+        }
+        
+    }
+} else {
+    <p>@Model.ErrorMessage</p>
+}

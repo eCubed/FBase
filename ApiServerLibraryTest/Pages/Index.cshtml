@@ -2,8 +2,13 @@
 @model ApiServerLibraryTest.Pages.IndexModel
 @{
 }
-
-<h1>ApiServerLibraryTest</h1>
 <p>
-    ApiServerLibraryTest 12345
+    ApiServerLibraryTest 123456
 </p>
+@if(User.Identity.IsAuthenticated)
+{
+    <p>Authenticated</p>
+} else
+{
+    <p>Not authenticated</p>
+}

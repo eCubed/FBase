@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace FBase.Foundations
 {
-    public static class ManagerHelper
-    {        public static ManagerResult CreateManagerResult(this Exception e, string primaryMessage = "")
+    public static class ManagerExtensions
+    {        
+        public static ManagerResult CreateManagerResult(this Exception e, string primaryMessage = "")
         {
             List<string> errors = new List<string>();
 

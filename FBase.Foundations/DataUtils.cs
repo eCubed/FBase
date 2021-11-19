@@ -36,10 +36,10 @@ namespace FBase.Foundations
         public static async Task<ManagerResult<TKey>> CreateAsync<T, TKey, TModel>(TModel model, IAsyncStore<T, TKey> store,
             Func<T, Task<T>> findUniqueAsync = null, Func<T, ManagerResult> canCreate = null, Action<T> setNonModelData = null)
             where T : class, IIdentifiable<TKey>, new()
-            where TModel : class, IModel<T>
+            where TModel : class, ISaveModel<T>
         {
             T newData = new T();
-            model.UpdateObject(newData);
+            model.SetObjectValues(newData);
 
             if (setNonModelData != null)
                 setNonModelData.Invoke(newData);
@@ -126,11 +126,11 @@ namespace FBase.Foundations
         public static async Task<ManagerResult> UpdateAsync<T, TKey, TModel>(TKey id, TModel model, IAsyncStore<T, TKey> store,
             Func<T, Task<T>> findUniqueAsync = null, Func<T, ManagerResult> canUpdate = null, Action<T> setNonModelData = null)
             where T : class, IIdentifiable<TKey>, new()
-            where TModel : class, IModel<T>
+            where TModel : class, ISaveModel<T>
         {
             return await DataUtils.UpdateAsync(id, store, findUniqueAsync, canUpdate,
                 fillNewValues: data => {
-                    model.UpdateObject(data);
+                    model.SetObjectValues(data);
                     setNonModelData?.Invoke(data);
                 });
         }
@@ -141,7 +141,7 @@ namespace FBase.Foundations
         public static async Task<ManagerResult<TModel>> GetOneRecordAsync<T, TKey, TModel>(TKey id, IAsyncStore<T, TKey> store,
             Func<T, ManagerResult> canGet = null)
             where T : class, IIdentifiable<TKey>, new()
-            where TModel : class, IModel<T>, new()
+            where TModel : class, IDisplayModel<T>, new()
         {
             T data = await store.FindByIdAsync(id);
 
@@ -163,7 +163,7 @@ namespace FBase.Foundations
 
         public static ResultSet<TModel> GetMany<T, TKey, TModel>(IQueryable<T> filteredQueryable, int page = 1, int pageSize = 10)
            where T : class, IIdentifiable<TKey>
-           where TModel : class, IModel<T>, new()
+           where TModel : class, IDisplayModel<T>, new()
         {
             return ResultSetHelper.Convert(ResultSetHelper.GetResults<T, TKey>(filteredQueryable, page, pageSize), data =>
             {

@@ -2,14 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="FBase.DotNetCore.EntityFramework" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FBase.ApiServer\FBase.ApiServer.csproj" />
+    <ProjectReference Include="..\FBase.Api\FBase.Api.csproj" />
   </ItemGroup>
 
 </Project>

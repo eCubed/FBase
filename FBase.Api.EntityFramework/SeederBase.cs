@@ -37,7 +37,7 @@ namespace FBase.Api.EntityFramework
 
             if (user == null)
             {
-                string usernameToSave = $"{username}@idfernando.com";
+                string usernameToSave = username;
                 user = new TUser()
                 {
                     UserName = usernameToSave,

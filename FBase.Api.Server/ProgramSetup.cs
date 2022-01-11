@@ -1,8 +1,10 @@
 ﻿using FBase.Api.EntityFramework;
+using FBase.Api.Server.Controllers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,6 +49,7 @@ public static class ProgramSetup
         builder.Services.AddSingleton(tokenValidationParameters);
 
         builder.Services.AddMvc();
+
         builder.Services.AddMvcCore().AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;

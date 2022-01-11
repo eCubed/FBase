@@ -10,15 +10,15 @@ namespace FBase.Api.EntityFramework
         where TRole: IdentityRole<TUserKey>
         where TUserKey: IEquatable<TUserKey>
     {
-        public DbSet<App<TUser, TUserKey>> Apps { get; set; }
-        public DbSet<AppAuthorization<TUser, TUserKey>> AppAuthorizations { get; set; }
-        public DbSet<AuthorizationCode<TUser, TUserKey>> AuthorizationCodes { get; set; }
-        public DbSet<CredentialSet<TUser, TUserKey>> CredentialSets { get; set; }
-        public DbSet<RefreshToken<TUser, TUserKey>> RefreshTokens { get; set; }
-        public DbSet<Scope> Scopes { get; set; }
-        public DbSet<ScopeApp<TUser, TUserKey>> ScopeApps { get; set; }
+        public DbSet<App<TUser, TUserKey>> Apps { get; set; } = null!;
+        public DbSet<AppAuthorization<TUser, TUserKey>> AppAuthorizations { get; set; } = null!;
+        public DbSet<AuthorizationCode<TUser, TUserKey>> AuthorizationCodes { get; set; } = null!;
+        public DbSet<CredentialSet<TUser, TUserKey>> CredentialSets { get; set; } = null!;
+        public DbSet<RefreshToken<TUser, TUserKey>> RefreshTokens { get; set; } = null!;
+        public DbSet<Scope> Scopes { get; set; } = null!;
+        public DbSet<ScopeApp<TUser, TUserKey>> ScopeApps { get; set; } = null!;
 
-        public DbSet<ScopeAppAuthorization<TUser, TUserKey>> ScopeAppAuthorizations { get; set; }
+        public DbSet<ScopeAppAuthorization<TUser, TUserKey>> ScopeAppAuthorizations { get; set; } = null!;
 
         public ApiServerDbContext(DbContextOptions options) : base(options)
         {

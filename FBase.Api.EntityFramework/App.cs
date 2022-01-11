@@ -9,9 +9,9 @@ namespace FBase.Api.EntityFramework
         where TUser : IdentityUser<TUserKey>
         where TUserKey: IEquatable<TUserKey>
     {
-        public TUserKey UserId { get; set; }
-        public TUser User { get; set; }
-        public string Name { get; set; }
+        public TUserKey UserId { get; set; } = default!;
+        public TUser User { get; set; } = null!;
+        public string Name { get; set; } = "";
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? CreatedDate { get; set; }
 

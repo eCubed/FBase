@@ -7,7 +7,7 @@ namespace FBase.Api.EntityFramework
         where TRole : IdentityRole<TUserKey>, new()
         where TUserKey : IEquatable<TUserKey>
     {
-        private ApiServerDbContext<TUser, TRole, TUserKey> db { get; set; } = null!;
+        protected ApiServerDbContext<TUser, TRole, TUserKey> db { get; set; } = null!;
         private UserManager<TUser> UM { get; set; } = null!;
         private RoleManager<TRole> RM { get; set; } = null!;
 

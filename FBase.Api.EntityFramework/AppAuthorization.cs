@@ -10,9 +10,9 @@ namespace FBase.Api.EntityFramework
 
     {
         public long AppId { get; set; }
-        public App<TUser, TUserKey> App { get; set; }
-        public TUserKey UserId { get; set; }
-        public TUser User { get; set; }
+        public App<TUser, TUserKey> App { get; set; } = null!;
+        public TUserKey UserId { get; set; } = default!;
+        public TUser User { get; set; } = null!;
 
         public long Id { get; set; }
     }

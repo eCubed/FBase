@@ -39,7 +39,9 @@ public class AppManager<TApp, TUserKey> : ManagerBase<TApp, long>
         var createRes = await DataUtils.CreateAsync(
             entity: app,
             store: GetAppStore(),
+#pragma warning disable CS8621 // Nullability of reference types in return type doesn't match the target delegate (possibly because of nullability attributes).
             findUniqueAsync: FindUniqueAsync);
+#pragma warning restore CS8621 // Nullability of reference types in return type doesn't match the target delegate (possibly because of nullability attributes).
 
         if (!createRes.Success)
             return new ManagerResult<TApp>(createRes.Errors);
@@ -52,7 +54,9 @@ public class AppManager<TApp, TUserKey> : ManagerBase<TApp, long>
         return await DataUtils.UpdateAsync(
             id: id,
             store: GetAppStore(),
+#pragma warning disable CS8621 // Nullability of reference types in return type doesn't match the target delegate (possibly because of nullability attributes).
             findUniqueAsync: FindUniqueAsync,
+#pragma warning restore CS8621 // Nullability of reference types in return type doesn't match the target delegate (possibly because of nullability attributes).
             canUpdate: (app) =>
             {
                 if (!app.UserId.Equals(requestorId))
@@ -97,7 +101,9 @@ public class AppManager<TApp, TUserKey> : ManagerBase<TApp, long>
         if (app == null)
             return new ManagerResult(ManagerErrors.RecordNotFound);
 
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
         IScope scope = GetAppStore().GetQueryableScopes().SingleOrDefault(s => s.Name == scopeName);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
         if (scope == null)
             return new ManagerResult(ApiMessages.ScopeNotFound);
@@ -114,7 +120,9 @@ public class AppManager<TApp, TUserKey> : ManagerBase<TApp, long>
         if (app == null)
             return new ManagerResult(ManagerErrors.RecordNotFound);
 
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
         IScope scope = GetAppStore().GetQueryableScopes(appId).SingleOrDefault(s => s.Name == scopeName);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
         if (scope == null)
             return new ManagerResult(ApiMessages.ScopeNotInApp);

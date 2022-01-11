@@ -18,7 +18,9 @@ public static class ProgramSetup
     public static void Configure<TApiServerConfig, TDbContext, TUser, TRole, TUserKey, TSeeder>(
         string[] args, 
         ProgramSetupOptions options,
-        Func<StaticFileOptions?>? provideStaticFileOptions = null)
+        Action<TApiServerConfig, WebApplicationBuilder>? setupAdditionalEntities = null,
+        Action<TApiServerConfig, WebApplicationBuilder>? registerAdditionalServices = null,
+        Func<TApiServerConfig, StaticFileOptions?>? provideStaticFileOptions = null)
         where TApiServerConfig : class, IApiServerConfig, new()
         where TUserKey : IEquatable<TUserKey>
         where TUser: IdentityUser<TUserKey>, new()
@@ -59,6 +61,8 @@ public static class ProgramSetup
             .AddEntityFrameworkStores<TDbContext>()
             .AddDefaultTokenProviders();
 
+        setupAdditionalEntities?.Invoke(config, builder);
+
         builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -74,6 +78,8 @@ public static class ProgramSetup
         builder.Services.AddCors();
         builder.Services.AddRazorPages();
         builder.Services.AddControllers();
+
+        registerAdditionalServices?.Invoke(config, builder);
 
         var app = builder.Build();
 
@@ -108,7 +114,7 @@ public static class ProgramSetup
             options.AllowAnyHeader();
         });
 
-        var staticFileOptions = provideStaticFileOptions?.Invoke();
+        var staticFileOptions = provideStaticFileOptions?.Invoke(config);
 
         if (staticFileOptions == null)
         {

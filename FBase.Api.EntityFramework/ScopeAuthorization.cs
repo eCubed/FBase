@@ -9,8 +9,8 @@ namespace FBase.Api.EntityFramework
     {
         public long Id { get; set; }
         public int ScopeId { get; set; }
-        public Scope Scope { get; set; }
+        public Scope Scope { get; set; } = null!;
         public long AppAuthorizationId { get; set; }
-        public AppAuthorization<TUser, TUserKey> AppAuthorization { get; set; }
+        public AppAuthorization<TUser, TUserKey> AppAuthorization { get; set; } = null!;
     }
 }

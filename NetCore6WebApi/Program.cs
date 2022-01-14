@@ -15,5 +15,5 @@ ProgramSetup.Configure<TestingConfig, TestingDbContext, TestingUser, TestingRole
             new NewUserWithRoles { Username = "admin@testing.com", Roles = new List<string> { "admin", "subscriber "}},
             new NewUserWithRoles { Username = "user1@testing.com", Roles = new List<string> { "subscriber" }},
             new NewUserWithRoles { Username = "user2@testing.com", Roles = new List<string> { "subscriber" }},
-        },        
+        }        
     });

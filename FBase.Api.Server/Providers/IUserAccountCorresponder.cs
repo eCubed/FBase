@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace FBase.Api.Server;
+namespace FBase.Api.Server.Providers;
 
 public interface IUserAccountCorresponder<TUser, TUserKey>
     where TUser : IdentityUser<TUserKey>

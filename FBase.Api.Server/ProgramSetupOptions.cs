@@ -17,6 +17,5 @@ namespace FBase.Api.Server
         public Action<TApiServerConfig, WebApplicationBuilder>? SetupAdditionalEntities { get; set; } = null;
         public Action<TApiServerConfig, WebApplicationBuilder>? RegisterAdditionalServices { get; set; } = null;
         public Func<TApiServerConfig, StaticFileOptions>? ProvideStaticFileOptions { get; set; } = null;
-        public IUserAccountCorresponder<TUser, TUserKey>? UserAccountCorresponder { get; set; } = null;
     }
 }

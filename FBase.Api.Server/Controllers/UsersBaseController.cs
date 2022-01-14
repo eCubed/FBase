@@ -1,5 +1,6 @@
 ﻿using FBase.Api.EntityFramework;
 using FBase.Api.Server.Models;
+using FBase.Api.Server.Providers;
 using FBase.Api.Server.Utils;
 using FBase.Cryptography;
 using FBase.Foundations;
@@ -21,18 +22,20 @@ public abstract class UsersBaseController<TApiServerConfig, TUser, TUserKey, TRe
     private ICrypter Crypter { get; set; }
     private TApiServerConfig Config { get; set; }
     private ProgramSetupOptions<TApiServerConfig, TUser, TUserKey> ProgramSetupOptions { get; set; }
+    private IUserAccountCorresponder<TUser, TUserKey> UserAccountCorresponder { get; set; }
 
     public UsersBaseController(
         UserManager<TUser> userManager, 
         ICrypter crypter,
         TApiServerConfig config,
-        ProgramSetupOptions<TApiServerConfig, TUser, TUserKey> programSetupOptions)
+        ProgramSetupOptions<TApiServerConfig, TUser, TUserKey> programSetupOptions,
+        IUserAccountCorresponder<TUser, TUserKey> userAccountCorresponder)
     {
         UserManager = userManager;
         Crypter = crypter;
         Config = config;
         ProgramSetupOptions = programSetupOptions;
-        
+        UserAccountCorresponder = userAccountCorresponder;        
     }
 
     /*
@@ -94,16 +97,13 @@ public abstract class UsersBaseController<TApiServerConfig, TUser, TUserKey, TRe
         if (user == null)
             return this.ToActionResult(new ManagerResult<TUser>(ManagerErrors.RecordNotFound));
 
-        if (ProgramSetupOptions.UserAccountCorresponder != null)
-        {
-            string token = await UserManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmRes = await UserManager.ConfirmEmailAsync(user, token);
+        string token = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+        var confirmRes = await UserManager.ConfirmEmailAsync(user, token);
 
-            if (!confirmRes.Succeeded)
-                return this.ToActionResult(new ManagerResult<TUser>(confirmRes.Errors.Select(e => e.Description).ToList()));
+        if (!confirmRes.Succeeded)
+            return this.ToActionResult(new ManagerResult<TUser>(confirmRes.Errors.Select(e => e.Description).ToList()));
 
-            ProgramSetupOptions.UserAccountCorresponder.SendEmailConfirmedCorrespondence(user);
-        }
+        UserAccountCorresponder.SendEmailConfirmedCorrespondence(user);
 
         return Ok();
     }
@@ -127,7 +127,7 @@ public abstract class UsersBaseController<TApiServerConfig, TUser, TUserKey, TRe
         if (!lockoutRes.Succeeded)
             return this.ToActionResult(new ManagerResult<TUser>(lockoutRes.Errors.Select(e => e.Description).ToList()));
 
-        ProgramSetupOptions.UserAccountCorresponder?.SendAccountLockedOutCorrespondence(user);
+        UserAccountCorresponder.SendAccountLockedOutCorrespondence(user);
 
         return Ok(new { LockoutEndDate = DateTime.Now.AddYears(200) });
     }
@@ -151,7 +151,7 @@ public abstract class UsersBaseController<TApiServerConfig, TUser, TUserKey, TRe
         if (!lockoutRes.Succeeded)
             return this.ToActionResult(new ManagerResult<TUser>(lockoutRes.Errors.Select(e => e.Description).ToList()));
 
-        ProgramSetupOptions.UserAccountCorresponder?.SendAccountReinstatedCorrespondence(user);
+        UserAccountCorresponder.SendAccountReinstatedCorrespondence(user);
 
         return Ok();
     }
@@ -164,6 +164,10 @@ public abstract class UsersBaseController<TApiServerConfig, TUser, TUserKey, TRe
         return Ok(new { IsEmailTaken = (user != null) });
     }
 
+    protected virtual void FillCustomUserForRegistration(TUser user, TRegisterModel registerModel)
+    {
+    }
+
     [HttpPost("register")]
     public async Task<IActionResult> RegisterAsync([FromBody] TRegisterModel registerModel)
     {
@@ -172,6 +176,7 @@ public abstract class UsersBaseController<TApiServerConfig, TUser, TUserKey, TRe
         user.EmailConfirmed = false;
         user.UserName = registerModel.Email;
         // What about extra fields!? We'll need a helper provider for that!
+        FillCustomUserForRegistration(user, registerModel);
 
         var createRes = await UserManager.CreateAsync(user, registerModel.Password);
 
@@ -183,15 +188,12 @@ public abstract class UsersBaseController<TApiServerConfig, TUser, TUserKey, TRe
         if (!addRoleRes.Succeeded)
             return this.ToActionResult(new ManagerResult<TUser>(createRes.Errors.Select(e => e.Description).ToList()));
 
-        if (ProgramSetupOptions.UserAccountCorresponder != null)
-        {
-            string emailConfirmationToken = WebUtility.UrlEncode(await UserManager.GenerateEmailConfirmationTokenAsync(user)).Replace("%2B", "%20");
+        string emailConfirmationToken = WebUtility.UrlEncode(await UserManager.GenerateEmailConfirmationTokenAsync(user)).Replace("%2B", "%20");
 
-            string encryptedEmail = WebUtility.UrlEncode(Crypter.Encrypt(user.Email, Config.CryptionKey)).Replace("%2B", "%20");
+        string encryptedEmail = WebUtility.UrlEncode(Crypter.Encrypt(user.Email, Config.CryptionKey)).Replace("%2B", "%20");
 
-            ProgramSetupOptions.UserAccountCorresponder.SendSuccessfulRegistrationCorrespondence(user, emailConfirmationToken, encryptedEmail);
-        }
-
+        UserAccountCorresponder.SendSuccessfulRegistrationCorrespondence(user, emailConfirmationToken, encryptedEmail);
+        
         return StatusCode(201);
     }
 
@@ -212,7 +214,7 @@ public abstract class UsersBaseController<TApiServerConfig, TUser, TUserKey, TRe
             if (!res.Succeeded)
                 return this.ToActionResult<TUser>(new ManagerResult(res.Errors.Select(er => er.Description).ToArray()));
 
-            ProgramSetupOptions.UserAccountCorresponder?.SendEmailConfirmedCorrespondence(user);
+            UserAccountCorresponder.SendEmailConfirmedCorrespondence(user);
 
             return Ok();
         }
@@ -234,7 +236,7 @@ public abstract class UsersBaseController<TApiServerConfig, TUser, TUserKey, TRe
 
         string encryptedEmail = WebUtility.UrlEncode(Crypter.Encrypt(user.Email, Config.CryptionKey)).Replace("%2B", "%20");
 
-        ProgramSetupOptions.UserAccountCorresponder?.SendPasswordResetRequestCorrespondence(user, passwordResetToken, encryptedEmail);
+        UserAccountCorresponder.SendPasswordResetRequestCorrespondence(user, passwordResetToken, encryptedEmail);
 
         return Ok();
     }

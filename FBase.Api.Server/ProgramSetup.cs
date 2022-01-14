@@ -1,4 +1,5 @@
 ﻿using FBase.Api.EntityFramework;
+using FBase.Api.Server.Providers;
 using FBase.Cryptography;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -16,7 +17,7 @@ namespace FBase.Api.Server;
 
 public static class ProgramSetup
 {
-    public static void Configure<TApiServerConfig, TDbContext, TUser, TRole, TUserKey, TSeeder>(
+    public static void Configure<TApiServerConfig, TDbContext, TUser, TRole, TUserKey, TSeeder, TUserAccountCorresponder>(
         string[] args, 
         ProgramSetupOptions<TApiServerConfig, TUser, TUserKey> options)
         where TApiServerConfig : class, IApiServerConfig, new()
@@ -25,6 +26,7 @@ public static class ProgramSetup
         where TRole: IdentityRole<TUserKey>, new()
         where TDbContext : ApiServerDbContext<TUser, TRole, TUserKey>
         where TSeeder: SeederBase<TUser, TRole, TUserKey>, new()
+        where TUserAccountCorresponder: class, IUserAccountCorresponder<TUser, TUserKey>
     {
         var builder =  WebApplication.CreateBuilder(args);
         var config = new TApiServerConfig();
@@ -79,6 +81,7 @@ public static class ProgramSetup
         builder.Services.AddControllers();
 
         builder.Services.AddSingleton<ICrypter, Crypt>();
+        builder.Services.AddSingleton<IUserAccountCorresponder<TUser, TUserKey>, TUserAccountCorresponder>();
 
         options.RegisterAdditionalServices?.Invoke(config, builder);
 
@@ -136,5 +139,18 @@ public static class ProgramSetup
         app.MapControllers();
 
         app.Run();
+    }
+
+    public static void Configure<TApiServerConfig, TDbContext, TUser, TRole, TUserKey, TSeeder>(
+        string[] args,
+        ProgramSetupOptions<TApiServerConfig, TUser, TUserKey> options)
+        where TApiServerConfig : class, IApiServerConfig, new()
+        where TUserKey : IEquatable<TUserKey>
+        where TUser : IdentityUser<TUserKey>, new()
+        where TRole : IdentityRole<TUserKey>, new()
+        where TDbContext : ApiServerDbContext<TUser, TRole, TUserKey>
+        where TSeeder : SeederBase<TUser, TRole, TUserKey>, new()
+    {
+        Configure<TApiServerConfig, TDbContext, TUser, TRole, TUserKey, TSeeder, NullUserAccountCorresponder<TUser, TUserKey>>(args, options);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FBase.Api.Server;
 using FBase.Api.Server.Controllers;
+using FBase.Api.Server.Providers;
 using FBase.Cryptography;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +18,12 @@ public class UsersController : UsersBaseController<TestingConfig, TestingUser, s
 {
     public UsersController(
         TestingConfig config,
-        TestingDbContext context,
         UserManager<TestingUser> userManager,
         TokenValidationParameters tokenValidationParameters,
         ProgramSetupOptions<TestingConfig, TestingUser, string> programSetupOptions,
-        ICrypter crypter
-        ) : base(userManager, crypter, config, programSetupOptions)
+        ICrypter crypter,
+        IUserAccountCorresponder<TestingUser, string> userAccountCorresponder
+        ) : base(userManager, crypter, config, programSetupOptions, userAccountCorresponder)
     {
     }
 }

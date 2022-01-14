@@ -34,7 +34,7 @@ public static class ControllerExtensions
     }
 
     public static async Task<AuthenticatedInfo<TUserKey>> ResolveAuthenticatedEntitiesAsync<TUser, TUserKey>(
-        this Controller controller,
+        this ControllerBase controller,
         UserManager<TUser> userManager)
         where TUser: IdentityUser<TUserKey>
         where TUserKey: IEquatable<TUserKey>
@@ -51,7 +51,7 @@ public static class ControllerExtensions
     }
 
     public static async Task<bool> IsRequestorAdminAsync<TUser, TUserKey>(
-        this Controller controller, 
+        this ControllerBase controller, 
         UserManager<TUser> userManager,
         string administratorRoleName)
         where TUser : IdentityUser<TUserKey>

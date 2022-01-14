@@ -6,7 +6,7 @@ using NetCore6WebApi.Data;
 
 ProgramSetup.Configure<TestingConfig, TestingDbContext, TestingUser, TestingRole, string, TestingSeeder>(
     args: args,
-    options: new ProgramSetupOptions
+    options: new ProgramSetupOptions<TestingConfig, TestingUser, string>
     {
         ConfigurationKey = "TestingConfig",
         Roles = new List<string> { "admin", "subscriber" },
@@ -15,5 +15,5 @@ ProgramSetup.Configure<TestingConfig, TestingDbContext, TestingUser, TestingRole
             new NewUserWithRoles { Username = "admin@testing.com", Roles = new List<string> { "admin", "subscriber "}},
             new NewUserWithRoles { Username = "user1@testing.com", Roles = new List<string> { "subscriber" }},
             new NewUserWithRoles { Username = "user2@testing.com", Roles = new List<string> { "subscriber" }},
-        }
+        },        
     });

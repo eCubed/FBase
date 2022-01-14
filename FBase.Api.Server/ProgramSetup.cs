@@ -1,4 +1,5 @@
 ﻿using FBase.Api.EntityFramework;
+using FBase.Cryptography;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -17,10 +18,7 @@ public static class ProgramSetup
 {
     public static void Configure<TApiServerConfig, TDbContext, TUser, TRole, TUserKey, TSeeder>(
         string[] args, 
-        ProgramSetupOptions options,
-        Action<TApiServerConfig, WebApplicationBuilder>? setupAdditionalEntities = null,
-        Action<TApiServerConfig, WebApplicationBuilder>? registerAdditionalServices = null,
-        Func<TApiServerConfig, StaticFileOptions?>? provideStaticFileOptions = null)
+        ProgramSetupOptions<TApiServerConfig, TUser, TUserKey> options)
         where TApiServerConfig : class, IApiServerConfig, new()
         where TUserKey : IEquatable<TUserKey>
         where TUser: IdentityUser<TUserKey>, new()
@@ -45,6 +43,7 @@ public static class ProgramSetup
             ClockSkew = TimeSpan.Zero
         };
         builder.Services.AddSingleton(tokenValidationParameters);
+        builder.Services.AddSingleton(options);
 
         builder.Services.AddMvc();
         builder.Services.AddMvcCore().AddJsonOptions(options =>
@@ -61,7 +60,7 @@ public static class ProgramSetup
             .AddEntityFrameworkStores<TDbContext>()
             .AddDefaultTokenProviders();
 
-        setupAdditionalEntities?.Invoke(config, builder);
+        options.SetupAdditionalEntities?.Invoke(config, builder);
 
         builder.Services.AddAuthentication(options =>
         {
@@ -79,7 +78,9 @@ public static class ProgramSetup
         builder.Services.AddRazorPages();
         builder.Services.AddControllers();
 
-        registerAdditionalServices?.Invoke(config, builder);
+        builder.Services.AddSingleton<ICrypter, Crypt>();
+
+        options.RegisterAdditionalServices?.Invoke(config, builder);
 
         var app = builder.Build();
 
@@ -91,7 +92,7 @@ public static class ProgramSetup
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<TUser>>();
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<TRole>>();
 
-                TSeeder seeder = new TSeeder(); // (db!, userManager!, roleManager!);
+                TSeeder seeder = new TSeeder();
                 seeder.SetupPersistence(db, userManager, roleManager);
                 seeder.InitializeDataAsync(options.Roles, options.UserWithRoles).Wait();
                 app.UseDeveloperExceptionPage();
@@ -114,7 +115,7 @@ public static class ProgramSetup
             options.AllowAnyHeader();
         });
 
-        var staticFileOptions = provideStaticFileOptions?.Invoke(config);
+        var staticFileOptions = options.ProvideStaticFileOptions?.Invoke(config);
 
         if (staticFileOptions == null)
         {

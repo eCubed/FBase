@@ -159,22 +159,35 @@ public static class AuthenticationTools
         where TUser : IdentityUser<TUserKey>, new()
     {
         var user = await userManager.FindByNameAsync(loginModel.Username);
+        List<string> errors = new List<string> { ManagerErrors.Unauthorized };
 
-        if (user != null && await userManager.CheckPasswordAsync(user, loginModel.Password))
+        if (user == null || !(await userManager.CheckPasswordAsync(user, loginModel.Password)))
         {
-            var tokenResponse = await GenerateTokenResponseAsync(
-                 config: config,
-                 userManager: userManager,
-                 user: user,
-                 refreshToken: null,
-                 refreshTokenManager: refreshTokenManager
-             );
+            errors.Add(ApiServerMessages.InvalidLoginCredentials);
+            return new ManagerResult<TokenResponse>(errors);
+        }
+            
 
-            return new ManagerResult<TokenResponse>(tokenResponse);
-        }
-        else
+        if (!(await userManager.IsEmailConfirmedAsync(user)))
         {
-            return new ManagerResult<TokenResponse>(ManagerErrors.Unauthorized);
+            errors.Add(ApiServerMessages.UnconfirmedEmail);
+            return new ManagerResult<TokenResponse>(errors);
         }
+
+        if ((await userManager.IsLockedOutAsync(user)))
+        {
+            errors.Add(ApiServerMessages.AccountLockedOut);
+            return new ManagerResult<TokenResponse>(errors);
+        }
+
+        var tokenResponse = await GenerateTokenResponseAsync(
+                config: config,
+                userManager: userManager,
+                user: user,
+                refreshToken: null,
+                refreshTokenManager: refreshTokenManager
+            );
+
+        return new ManagerResult<TokenResponse>(tokenResponse);
     }
 }

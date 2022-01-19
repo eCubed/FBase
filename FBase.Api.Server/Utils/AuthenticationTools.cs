@@ -1,16 +1,11 @@
-﻿using FBase.Api;
-using FBase.Api.EntityFramework;
+﻿using FBase.Api.EntityFramework;
 using FBase.Api.Server.Models;
 using FBase.Foundations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace FBase.Api.Server.Utils;
 

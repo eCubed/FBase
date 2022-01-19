@@ -31,7 +31,7 @@ namespace NetCore6WebApi.Providers
 
         public void SendPasswordResetRequestCorrespondence(TestingUser user, string passwordResetToken, string encryptedEmail)
         {
-            string href = $"https://localhost:4300/password/reset/{passwordResetToken}/{encryptedEmail}";
+            string href = $"http://localhost:3000/password/reset/{passwordResetToken}/{encryptedEmail}";
             string passwordResetMessageBody = $"You requested to change your password because you forgot. <a href=\"{href}\">Here</a>";
 
             Emailer.Send(from: Config.EmailCredentials.SenderEmail, to: user.Email, title: "Password Reset Request", body: passwordResetMessageBody);

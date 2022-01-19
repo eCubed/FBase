@@ -1,10 +1,9 @@
-﻿namespace FBase.Api.Server
+﻿namespace FBase.Api.Server;
+
+public interface IApiServerConfig
 {
-    public interface IApiServerConfig
-    {
-        string ConnectionString { get; set; }
-        string CryptionKey { get; set; }
-        string Issuer { get; set; }
-        string Audience { get; set; }
-    }
+    string ConnectionString { get; set; }
+    string CryptionKey { get; set; }
+    string Issuer { get; set; }
+    string Audience { get; set; }
 }

@@ -1,5 +1,4 @@
-﻿using FBase.Api.EntityFramework;
-using FBase.Api.Server.Models;
+﻿using FBase.Api.Server.Models;
 using FBase.Api.Server.Providers;
 using FBase.Api.Server.Utils;
 using FBase.Cryptography;

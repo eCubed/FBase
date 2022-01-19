@@ -202,14 +202,16 @@ public abstract class UsersBaseController<TApiServerConfig, TUser, TUserKey, TRe
     {
         try
         {
-            string email = Crypter.Decrypt(confirmEmailModel.EncryptedEmail.Replace(" ", "+"), Config.CryptionKey);
+            string email = Crypter.Decrypt(WebUtility.UrlDecode(confirmEmailModel.EncryptedEmail.Replace(" ", "+")), Config.CryptionKey);
             TUser user = await UserManager.FindByEmailAsync(email);
 
             if (user == null)
                 return NotFound(new ManagerResult(ManagerErrors.RecordNotFound));
 
+            string decodedToken = WebUtility.UrlDecode(confirmEmailModel.EmailConfirmationToken).Replace(" ", "+");
+
             var res = await UserManager.ConfirmEmailAsync(user,
-                token: confirmEmailModel.EmailConfirmationToken.Replace(" ", "+"));
+                token: decodedToken);
 
             if (!res.Succeeded)
                 return this.ToActionResult<TUser>(new ManagerResult(res.Errors.Select(er => er.Description).ToArray()));

@@ -248,14 +248,16 @@ public abstract class UsersBaseController<TApiServerConfig, TUser, TUserKey, TRe
     {
         try
         {
-            string email = Crypter.Decrypt(passwordResetModel.EncryptedEmail.Replace(" ", "+"), Config.CryptionKey);
+            string email = Crypter.Decrypt(WebUtility.UrlDecode(passwordResetModel.EncryptedEmail.Replace(" ", "+")), Config.CryptionKey);
             TUser user = await UserManager.FindByEmailAsync(email);
 
             if (user == null)
                 return NotFound(new ManagerResult(ManagerErrors.RecordNotFound));
 
+            string decodedToken = WebUtility.UrlDecode(passwordResetModel.PasswordResetToken).Replace(" ", "+");
+
             var res = await UserManager.ResetPasswordAsync(user,
-                token: passwordResetModel.PasswordResetToken.Replace(" ", "+"),
+                token: decodedToken,
                 passwordResetModel.NewPassword.Replace(" ", "+"));
 
             if (!res.Succeeded)

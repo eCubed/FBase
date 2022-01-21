@@ -269,4 +269,27 @@ public abstract class UsersBaseController<TApiServerConfig, TUser, TUserKey, TRe
             return this.ToActionResult<TUser>(e.CreateManagerResult());
         }
     }
+
+    [HttpPost("password/change")]
+    public async Task<IActionResult> ChangePasswordAsync([FromBody]ChangePasswordModel changePasswordModel)
+    {
+        AuthenticatedInfo<TUserKey> authenticatedInfo = await this.ResolveAuthenticatedEntitiesAsync<TUser, TUserKey>(UserManager);
+
+        if ((authenticatedInfo == null) || (authenticatedInfo.UserId == null))
+            return Unauthorized();
+
+        TUser user = await UserManager.FindByIdAsync(authenticatedInfo.UserId!.ToString());
+
+        if (user == null)
+            return Unauthorized();
+
+        var res = await UserManager.ChangePasswordAsync(user, changePasswordModel.CurrentPassword, changePasswordModel.NewPassword);
+
+        if (!res.Succeeded)
+        {
+            return this.ToActionResult<TUser>(new ManagerResult<TUser>(res.Errors.Select(e => e.Description).ToList()));
+        }
+
+        return Ok();
+    }
 }

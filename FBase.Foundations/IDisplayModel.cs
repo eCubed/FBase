@@ -1,8 +1,7 @@
-﻿namespace FBase.Foundations
+﻿namespace FBase.Foundations;
+
+public interface IDisplayModel<T>
+   where T : class
 {
-    public interface IDisplayModel<T>
-       where T : class
-    {
-        void FillModel(T data);
-    }
+    void FillModel(T data);
 }

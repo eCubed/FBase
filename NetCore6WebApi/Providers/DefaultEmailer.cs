@@ -32,10 +32,8 @@ namespace NetCore6WebApi.Providers
                 {
                     client.Send(message);
                 }
-                catch (SmtpException ex)
+                catch (SmtpException)
                 {
-                    // Do nothing for now.
-                    var dummy = 3;
                 }
             }
         }

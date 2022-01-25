@@ -1,9 +1,5 @@
 ﻿using FBase.Foundations;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FBase.DotNetCore.EntityFramework
 {
@@ -31,7 +27,7 @@ namespace FBase.DotNetCore.EntityFramework
 
         public virtual async Task DeleteAsync(TKey id)
         {
-            T entity = await FindByIdAsync(id);
+            T? entity = await FindByIdAsync(id);
 
             if (entity != null)
             {
@@ -45,13 +41,13 @@ namespace FBase.DotNetCore.EntityFramework
         }
 
         
-        public virtual async Task<T> FindByIdAsync(TKey id)
+        public virtual async Task<T?> FindByIdAsync(TKey id)
         {
             /*
             var expr = ExpressionTools.EqualsLambda<T, TKey>(Expression.Parameter(typeof(T), "p"), "Id", id);
             return await db.Set<T>().SingleOrDefaultAsync(expr);
             */
-            return await db.Set<T>().SingleOrDefaultAsync(p => p.Id.Equals(id));
+            return await db.Set<T>().SingleOrDefaultAsync(p => (p != null) ? p.Id!.Equals(id) : false);
         }
         
     }

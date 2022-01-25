@@ -10,7 +10,7 @@ public abstract class ManagerBase<T, TKey>
         Store = store;
     }
 
-    public virtual async Task<T> FindByIdAsync(TKey id)
+    public virtual async Task<T?> FindByIdAsync(TKey id)
     {
         return await Store.FindByIdAsync(id);
     }

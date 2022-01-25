@@ -1,7 +1,6 @@
-﻿namespace FBase.Api
+﻿namespace FBase.Api;
+
+public static class OAuthClaimTypes
 {
-    public static class OAuthClaimTypes
-    {
-        public static readonly string ApplicationId = "application-id";
-    }
+    public static readonly string ApplicationId = "application-id";
 }

@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.6.3</Version>
+    <Version>1.6.5</Version>
   </PropertyGroup>
 
 <ItemGroup>
@@ -13,11 +13,14 @@
 </ItemGroup>
 
 <ItemGroup>
-  <PackageReference Include="FBase.Api.EntityFramework" Version="1.6.3" />
   <PackageReference Include="FBase.Cryptography" Version="1.0.0" />
   <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
   <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.1" />
   <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.14.1" />
+</ItemGroup>
+
+<ItemGroup>
+  <ProjectReference Include="..\FBase.Api.EntityFramework\FBase.Api.EntityFramework.csproj" />
 </ItemGroup>
 
 </Project>

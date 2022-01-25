@@ -73,7 +73,7 @@ public static class AuthenticationTools
         {
             Username = user.UserName,
             Token = new JwtSecurityTokenHandler().WriteToken(securityToken),
-            RefreshToken = createRes.Data.Token,
+            RefreshToken = createRes?.Data?.Token ?? "",
             Roles = roles,
             ExpiresAt = securityToken.ValidTo
         };

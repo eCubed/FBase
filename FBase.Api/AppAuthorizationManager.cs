@@ -15,11 +15,9 @@ public class AppAuthorizationManager<TAppAuthorization, TUserKey> : ManagerBase<
         return (IAppAuthorizationStore<TAppAuthorization, TUserKey>)Store;
     }
 
-    private async Task<TAppAuthorization> FindUniqueAsync(TAppAuthorization match)
+    private async Task<TAppAuthorization?> FindUniqueAsync(TAppAuthorization match)
     {
-#pragma warning disable CS8603 // Possible null reference return.
         return await GetAppAuthorizationStore().FindUniqueAsync(match.AppId, match.UserId);
-#pragma warning restore CS8603 // Possible null reference return.
     }
 
     public async Task<TAppAuthorization> GetAppAuthorizationAsync(long appId, TUserKey userId)
@@ -29,16 +27,12 @@ public class AppAuthorizationManager<TAppAuthorization, TUserKey> : ManagerBase<
 
     public async Task<ManagerResult> AuthorizeAsync(long appId, TUserKey userId)
     {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-        TAppAuthorization existingAppAuthorization = await GetAppAuthorizationStore().FindUniqueAsync(appId, userId);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
-        List<IScope> appScopes = GetAppAuthorizationStore().GetQueryableAppScopes(appId).ToList();
-#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
+        TAppAuthorization? existingAppAuthorization = await GetAppAuthorizationStore().FindUniqueAsync(appId, userId);
+        List<IScope?> appScopes = GetAppAuthorizationStore().GetQueryableAppScopes(appId)?.ToList() ?? new List<IScope?>();
 
         if (existingAppAuthorization == null)
         {
-            TAppAuthorization appAuthorization = new TAppAuthorization();
+            TAppAuthorization appAuthorization = new();
             appAuthorization.AppId = appId;
             appAuthorization.UserId = userId;
 
@@ -53,7 +47,8 @@ public class AppAuthorizationManager<TAppAuthorization, TUserKey> : ManagerBase<
             // Add all of the scopes of the app to the scopes of this authorization
             appScopes.ForEach(appScope =>
             {
-                GetAppAuthorizationStore().AddScopeToAppAuthorizationAsync(appScope.Id, appAuthorization.Id);
+                if (appScope != null)
+                    GetAppAuthorizationStore().AddScopeToAppAuthorizationAsync(appScope.Id, appAuthorization.Id);
             });
         }
         else
@@ -64,9 +59,7 @@ public class AppAuthorizationManager<TAppAuthorization, TUserKey> : ManagerBase<
             {
                 unauthorizedScopes.ForEach(unauthorizedScopeName =>
                 {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                    IScope scope = appScopes.SingleOrDefault(s => s.Name == unauthorizedScopeName);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+                    IScope? scope = appScopes.SingleOrDefault(s => s?.Name == unauthorizedScopeName);
 
                     if (scope != null)
                         GetAppAuthorizationStore().AddScopeToAppAuthorizationAsync(scope.Id, existingAppAuthorization.Id);
@@ -86,9 +79,7 @@ public class AppAuthorizationManager<TAppAuthorization, TUserKey> : ManagerBase<
 
     public async Task<ManagerResult> RevokeAsync(long appId, TUserKey userId)
     {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-        TAppAuthorization appAuthorization = await GetAppAuthorizationStore().FindUniqueAsync(appId, userId);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+        TAppAuthorization? appAuthorization = await GetAppAuthorizationStore().FindUniqueAsync(appId, userId);
 
         if (appAuthorization == null)
             return new ManagerResult(ApiMessages.AppNotAuthorized);
@@ -98,29 +89,28 @@ public class AppAuthorizationManager<TAppAuthorization, TUserKey> : ManagerBase<
 
     public List<string> GetScopes(long appAuthorizationId)
     {
-        return GetAppAuthorizationStore().GetQueryableAppAuthorizationScopes(appAuthorizationId).OrderBy(s => s.Name).Select(s => s.Name).ToList();
+        return GetAppAuthorizationStore().GetQueryableAppAuthorizationScopes(appAuthorizationId)
+            .OrderBy(s => (s != null) ? s.Name : "").Select(s => (s != null) ? s.Name : "").ToList();
     }
 
     public bool HasScope(long appAuthorizationId, string scopeName)
     {
-        return GetAppAuthorizationStore().GetQueryableAppAuthorizationScopes(appAuthorizationId).Any(s => s.Name == scopeName);
+        return GetAppAuthorizationStore().GetQueryableAppAuthorizationScopes(appAuthorizationId).Any(s => s != null && s.Name == scopeName);
     }
 
     public async Task<List<string>> GetUnauthorizedScopesAsync(long appId, TUserKey userId)
     {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-        TAppAuthorization appAuthorization = await GetAppAuthorizationStore().FindUniqueAsync(appId, userId);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+        TAppAuthorization? appAuthorization = await GetAppAuthorizationStore().FindUniqueAsync(appId, userId);
 
-        List<string> appScopes = GetAppAuthorizationStore().GetQueryableAppScopes(appId).Select(s => s.Name).ToList();
+        List<string> appScopes = GetAppAuthorizationStore().GetQueryableAppScopes(appId).Select(s => (s != null) ? s.Name : "").ToList();
 
         if (appAuthorization == null)
             return appScopes;
 
         List<string> appAuthorizationScopes = GetAppAuthorizationStore().GetQueryableAppAuthorizationScopes(appAuthorization.Id)
-            .Select(s => s.Name).ToList();
+            .Select(s => (s != null) ? s.Name : "").ToList();
 
-        List<string> unauthorizedScopes = new List<string>();
+        List<string> unauthorizedScopes = new();
 
         appScopes.ForEach(appScope =>
         {

@@ -12,17 +12,17 @@ public class CredentialSetStore<TUser, TUserKey> : EntityStoreBase<CredentialSet
     {
     }
 
-    public async Task<CredentialSet<TUser, TUserKey>> FindAsync(string name, long appId)
+    public async Task<CredentialSet<TUser, TUserKey>?> FindAsync(string name, long appId)
     {
         return await db.Set<CredentialSet<TUser, TUserKey>>().SingleOrDefaultAsync(cs => cs.Name == name && cs.AppId == appId);
     }
 
-    public async Task<CredentialSet<TUser, TUserKey>> FindByClientIdAsync(string clientId)
+    public async Task<CredentialSet<TUser, TUserKey>?> FindByClientIdAsync(string clientId)
     {
         return await db.Set<CredentialSet<TUser, TUserKey>>().SingleOrDefaultAsync(cs => cs.ClientId == clientId);
     }
 
-    public async Task<IApp<TUserKey>> FindAppAsync(long appId)
+    public async Task<IApp<TUserKey>?> FindAppAsync(long appId)
     {
         return await db.Set<App<TUser, TUserKey>>().SingleOrDefaultAsync(a => a.Id.Equals(appId));
     }

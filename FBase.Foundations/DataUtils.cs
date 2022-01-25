@@ -5,12 +5,12 @@ public static class DataUtils
 
     #region Create
     public static async Task<ManagerResult> CreateAsync<T, TKey>(T entity, IAsyncStore<T, TKey> store,
-        Func<T?, Task<T>>? findUniqueAsync = null, Func<T, ManagerResult>? canCreate = null)
+        Func<T, Task<T?>>? findUniqueAsync = null, Func<T, ManagerResult>? canCreate = null)
         where T : class, IIdentifiable<TKey>
     {
         if (findUniqueAsync != null)
         {
-            T duplicate = await findUniqueAsync.Invoke(entity);
+            T? duplicate = await findUniqueAsync.Invoke(entity);
 
             if (duplicate != null)
                 return new ManagerResult(ManagerErrors.DuplicateOnCreate);
@@ -30,7 +30,7 @@ public static class DataUtils
     }
 
     public static async Task<ManagerResult<TKey>> CreateAsync<T, TKey, TModel>(TModel model, IAsyncStore<T, TKey> store,
-        Func<T?, Task<T>>? findUniqueAsync = null, Func<T, ManagerResult>? canCreate = null, Action<T>? setNonModelData = null)
+        Func<T, Task<T?>>? findUniqueAsync = null, Func<T, ManagerResult>? canCreate = null, Action<T>? setNonModelData = null)
         where T : class, IIdentifiable<TKey>, new()
         where TModel : class, ISaveModel<T>
     {
@@ -85,7 +85,7 @@ public static class DataUtils
 
     #region Update
     public static async Task<ManagerResult> UpdateAsync<T, TKey>(TKey id, IAsyncStore<T, TKey> store,
-        Func<T?, Task<T>>? findUniqueAsync = null, Func<T, ManagerResult>? canUpdate = null,
+        Func<T, Task<T?>>? findUniqueAsync = null, Func<T, ManagerResult>? canUpdate = null,
         Action<T>? fillNewValues = null)
         where T : class, IIdentifiable<TKey>
     {
@@ -125,7 +125,7 @@ public static class DataUtils
     }
 
     public static async Task<ManagerResult> UpdateAsync<T, TKey, TModel>(TKey id, TModel model, IAsyncStore<T, TKey> store,
-        Func<T?, Task<T>>? findUniqueAsync = null, Func<T, ManagerResult>? canUpdate = null, Action<T>? setNonModelData = null)
+        Func<T, Task<T?>>? findUniqueAsync = null, Func<T, ManagerResult>? canUpdate = null, Action<T>? setNonModelData = null)
         where T : class, IIdentifiable<TKey>, new()
         where TModel : class, ISaveModel<T>
     {

@@ -16,12 +16,10 @@ namespace NetCore6WebApi.Providers
 
         public void SendAccountLockedOutCorrespondence(TestingUser user)
         {
-            throw new NotImplementedException();
         }
 
         public void SendAccountReinstatedCorrespondence(TestingUser user)
         {
-            throw new NotImplementedException();
         }
 
         public void SendEmailConfirmedCorrespondence(TestingUser user)

@@ -13,7 +13,7 @@
 </ItemGroup>
 
 <ItemGroup>
-  <PackageReference Include="FBase.Api.EntityFramework" Version="1.6.1" />
+  <PackageReference Include="FBase.Api.EntityFramework" Version="1.6.3" />
   <PackageReference Include="FBase.Cryptography" Version="1.0.0" />
   <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
   <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.1" />

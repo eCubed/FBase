@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FBase.Api.Server\FBase.Api.Server.csproj" />
+    <ProjectReference Include="..\FBase.Api\FBase.Api.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,15 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.6.1</Version>
+    <Version>1.6.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FBase.Api" Version="1.6.0" />
+    <PackageReference Include="FBase.Api" Version="1.6.3" />
     <PackageReference Include="FBase.DotNetCore.EntityFramework" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.1" />
   </ItemGroup>

@@ -11,6 +11,7 @@ ProgramSetup.Configure<TestingConfig, TestingDbContext, TestingUser, TestingRole
     {
         ConfigurationKey = "TestingConfig",
         Roles = new List<string> { "admin", "subscriber" },
+        AdminRoleName = "admin",
         RegisterAdditionalServices = (config, app) =>
         {
             app.Services.AddTransient<IEmailer, DefaultEmailer>();

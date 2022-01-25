@@ -1,10 +1,12 @@
-﻿using FBase.Api.Server.Models;
+﻿using FBase.Api.EntityFramework;
+using FBase.Api.Server.Models;
 using FBase.Api.Server.Providers;
 using FBase.Api.Server.Utils;
 using FBase.Cryptography;
 using FBase.Foundations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace FBase.Api.Server.Controllers;
@@ -12,30 +14,38 @@ namespace FBase.Api.Server.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public abstract class UsersBaseController<TApiServerConfig, TUser, TUserKey, TRegisterModel> : ControllerBase
-    where TUser : IdentityUser<TUserKey>, new()
+    where TUser : IdentityUser<TUserKey>, IAppUser<TUserKey>, new()
     where TUserKey : IEquatable<TUserKey>
     where TApiServerConfig : class, IApiServerConfig, new()
     where TRegisterModel: class, IRegisterModel
 {
     private UserManager<TUser> UserManager { get; set; }
+    private AppUserManager<TUser, TUserKey> AppUserManager { get; set; }
     private ICrypter Crypter { get; set; }
     private TApiServerConfig Config { get; set; }
     private ProgramSetupOptions<TApiServerConfig, TUser, TUserKey> ProgramSetupOptions { get; set; }
     private IUserAccountCorresponder<TUser, TUserKey> UserAccountCorresponder { get; set; }
+    private DbContext db { get; set; }
 
     public UsersBaseController(
-        UserManager<TUser> userManager, 
+        UserManager<TUser> userManager,
+        DbContext context,
         ICrypter crypter,
         TApiServerConfig config,
         ProgramSetupOptions<TApiServerConfig, TUser, TUserKey> programSetupOptions,
         IUserAccountCorresponder<TUser, TUserKey> userAccountCorresponder)
     {
+
+        db = context;
         UserManager = userManager;
+        AppUserManager = new AppUserManager<TUser, TUserKey>(InstantiateSpecificAppUserStore(db));
         Crypter = crypter;
         Config = config;
         ProgramSetupOptions = programSetupOptions;
-        UserAccountCorresponder = userAccountCorresponder;        
+        UserAccountCorresponder = userAccountCorresponder;
     }
+
+    protected abstract IAppUserStore<TUser, TUserKey> InstantiateSpecificAppUserStore(DbContext db);
 
     /*
     [HttpGet("search/forselection/{searchText}/{pg}/{pageSize}")]
@@ -58,33 +68,33 @@ public abstract class UsersBaseController<TApiServerConfig, TUser, TUserKey, TRe
     }
     */
 
-    /*
     [HttpGet("search/{searchText}/{pg}/{pageSize}")]
-    [Authorize(Roles = "Administrators")]
-    public IActionResult SearchUsersAsync(string searchText, int pg = 1, int pageSize = 10)
+    public async Task<IActionResult> SearchUsersAsync(string searchText, int pg = 1, int pageSize = 10)
     {
-        var searchRes = TUserManager.SearchUsers(
+        if (!await this.IsRequestorAdminAsync<TUser, TUserKey>(UserManager, ProgramSetupOptions.AdminRoleName))
+        {
+            return Unauthorized();
+        }
+
+        var searchRes = AppUserManager.SearchUsers(
             searchText: searchText,
             page: pg,
             pageSize: pageSize,
-            projector: (user) =>
+            projector: (user) => new UserForAdminListItem<TUserKey>
             {
-                return new UserForAdminListItem
-                {
-                    Id = user.Id,
-                    Email = user.Email,
-                    IsEmailConfirmed = user.EmailConfirmed,
-                    IsUserLockedOut = UserManager.IsLockedOutAsync(user).Result
-                };
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                EmailConfirmed = user.EmailConfirmed,
+                LockedOut = UserManager.IsLockedOutAsync(user).Result
             });
 
         return Ok(searchRes);
     }
-    */
 
     [HttpPut("{id}/confirm/email")]
     // [Authorize(Roles = "Administrators")] /* Commented out because this abstraction cannot dynamically set attribute values */
-    public async Task<IActionResult> ConfirmEmailAsync(long id)
+    public async Task<IActionResult> ConfirmEmailAsync(TUserKey id)
     {
         if (!await this.IsRequestorAdminAsync<TUser, TUserKey>(UserManager, ProgramSetupOptions.AdminRoleName))
         {
@@ -109,7 +119,7 @@ public abstract class UsersBaseController<TApiServerConfig, TUser, TUserKey, TRe
 
     [HttpPut("{id}/lockout")]
     // [Authorize(Roles = "Administrators")]
-    public async Task<IActionResult> LockoutUserAsync(long id)
+    public async Task<IActionResult> LockoutUserAsync(TUserKey id)
     {
         if (!await this.IsRequestorAdminAsync<TUser, TUserKey>(UserManager, ProgramSetupOptions.AdminRoleName))
         {
@@ -133,7 +143,7 @@ public abstract class UsersBaseController<TApiServerConfig, TUser, TUserKey, TRe
 
     [HttpPut("{id}/endlockout")]
     // [Authorize(Roles = "Administrators")]
-    public async Task<IActionResult> EndLockoutUserAsync(long id)
+    public async Task<IActionResult> EndLockoutUserAsync(TUserKey id)
     {
         if (!await this.IsRequestorAdminAsync<TUser, TUserKey>(UserManager, ProgramSetupOptions.AdminRoleName))
         {

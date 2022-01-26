@@ -26,8 +26,8 @@ public class ThingsController : ControllerBase
     public async Task<IActionResult> CreateAsync([FromBody] ThingModel<Thing> thingModel)
     {
         var authInfo = await this.ResolveAuthenticatedEntitiesAsync<TestingUser, string>(UserManager);
-
-        return this.ToActionResult(await ThingManager.CreateAsync(thingModel, authInfo.UserId!));
+        var res = await ThingManager.CreateAsync(thingModel, authInfo.UserId!);
+        return this.ToActionResult<dynamic>(res, new { id = res.Data }, System.Net.HttpStatusCode.Created);
     }
 
     [HttpPut("{id}")]

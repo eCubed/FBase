@@ -28,19 +28,22 @@ public class ThingManager<TThing> : ManagerBase<TThing, int>
             });
     }
 
+    private Func<TThing, ManagerResult> GenerateAuthorizationFunction(string userId) =>
+        (thing) =>
+        {
+            if (thing.UserId != userId)
+                return new ManagerResult(ManagerErrors.Unauthorized);
+
+            return new ManagerResult();
+        };
+
     public async Task<ManagerResult> UpdateAsync(int id, ThingModel<TThing> thingModel, string userId)
     {
         return await DataUtils.UpdateAsync(
             id: id,
             store: GetThingStore(),
             findUniqueAsync: FindUniqueAsync,
-            canUpdate: (thing) =>
-            {
-                if (thing.UserId != userId)
-                    return new ManagerResult(ManagerErrors.Unauthorized);
-
-                return new ManagerResult();
-            },
+            canUpdate: GenerateAuthorizationFunction(userId),
             fillNewValues: (thing) =>
             {
                 thingModel.SetObjectValues(thing);
@@ -52,13 +55,7 @@ public class ThingManager<TThing> : ManagerBase<TThing, int>
         return await DataUtils.DeleteAsync(
             id: id,
             store: GetThingStore(),
-            canDelete: (thing) =>
-            {
-                if (thing.UserId != userId)
-                    return new ManagerResult(ManagerErrors.Unauthorized);
-
-                return new ManagerResult();
-            });
+            canDelete: GenerateAuthorizationFunction(userId));
     }
 
     public ResultSet<ThingListItem<TThing>> GetThings(string userId, int page = 1, int pageSize = 10)
@@ -67,6 +64,14 @@ public class ThingManager<TThing> : ManagerBase<TThing, int>
             filteredQueryable: GetThingStore().GetQueryableThings().Where(t => t.UserId == userId).OrderBy(t => (t != null) ? t.Name : "").AsQueryable(),
             page: page,
             pageSize: pageSize);
+    }
+
+    public async Task<ManagerResult<ThingModel<TThing>>> GetAsync(int id, string userId)
+    {
+        return await DataUtils.GetOneRecordAsync<TThing, int, ThingModel<TThing>>(
+            id: id,
+            store: GetThingStore(),
+            canGet: GenerateAuthorizationFunction(userId));
     }
     
 }

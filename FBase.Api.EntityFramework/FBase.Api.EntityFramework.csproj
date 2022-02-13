@@ -6,15 +6,13 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Version>1.6.5</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FBase.Api" Version="1.6.5" />
+    <PackageReference Include="FBase.DotNetCore.EntityFramework" Version="1.6.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\FBase.Api\FBase.Api.csproj" />
-    <ProjectReference Include="..\FBase.DotNetCore.EntityFramework\FBase.DotNetCore.EntityFramework.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,7 @@
-﻿namespace FBase.Foundations
+﻿namespace FBase.Foundations;
+
+public interface ISaveModel<T>
+    where T : class
 {
-    public interface ISaveModel<T>
-        where T : class
-    {
-        void SetObjectValues(T data);
-    }
+    void SetObjectValues(T data);
 }

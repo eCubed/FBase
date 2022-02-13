@@ -28,7 +28,7 @@ namespace FBase.Api.EntityFramework
             await db.SaveChangesAsync();
         }
 
-        public async Task<App<TUser, TUserKey>> FindByNameAsync(string name)
+        public async Task<App<TUser, TUserKey>?> FindByNameAsync(string name)
         {
             return await db.Set<App<TUser, TUserKey>>().SingleOrDefaultAsync(a => a.Name == name);
         }
@@ -47,7 +47,7 @@ namespace FBase.Api.EntityFramework
 
         public async Task RemoveScopeFromAppAsync(int scopeId, long appId)
         {
-            ScopeApp<TUser, TUserKey> scopeApp = await db.Set<ScopeApp<TUser, TUserKey>>().SingleOrDefaultAsync(sa => sa.ScopeId == scopeId && sa.AppId == appId);
+            ScopeApp<TUser, TUserKey>? scopeApp = await db.Set<ScopeApp<TUser, TUserKey>>().SingleOrDefaultAsync(sa => sa.ScopeId == scopeId && sa.AppId == appId);
 
             if (scopeApp != null)
             {

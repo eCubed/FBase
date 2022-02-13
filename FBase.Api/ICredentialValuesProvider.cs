@@ -1,8 +1,7 @@
-﻿namespace FBase.Api
+﻿namespace FBase.Api;
+
+public interface ICredentialValuesProvider
 {
-    public interface ICredentialValuesProvider
-    {
-        string GenerateClientId();
-        string GenerateClientSecret();
-    }
+    string GenerateClientId();
+    string GenerateClientSecret();
 }

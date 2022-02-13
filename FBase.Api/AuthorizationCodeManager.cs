@@ -44,12 +44,12 @@ public class AuthorizationCodeManager<TAuthorizationCode, TUserKey> : ManagerBas
 
     public async Task<ManagerResult<TAuthorizationCode>> ValidateAsync(string code, string codeVerifier, int gracePeriodInMinutes = 5)
     {
-        TAuthorizationCode authorizationCode = await GetAuthorizationCodeStore().FindByCodeAsync(code);
+        TAuthorizationCode? authorizationCode = await GetAuthorizationCodeStore().FindByCodeAsync(code);
 
         if (authorizationCode == null)
             return new ManagerResult<TAuthorizationCode>(ApiMessages.InvalidAuthorizationCode);
 
-        if (authorizationCode.CreatedDate.Value.AddMinutes(gracePeriodInMinutes) < DateTime.Now)
+        if (authorizationCode.CreatedDate?.AddMinutes(gracePeriodInMinutes) < DateTime.Now)
             return new ManagerResult<TAuthorizationCode>(ApiMessages.ExpiredAuthorizationCode);
 
         if (!PckeUtils.Check(codeVerifier, authorizationCode.CodeChallenge))

@@ -2,15 +2,23 @@
 using FBase.Foundations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace FBase.Api.Server.Utils;
 
 public static class ControllerExtensions
 {
-    public static IActionResult ToActionResult<T>(this ControllerBase controller, ManagerResult res, T? objectToReturn = default(T))
+    public static IActionResult ToActionResult(this ControllerBase controller, ManagerResult res, HttpStatusCode successStatusCode = HttpStatusCode.OK)
     {
         if (res.Errors == null || !res.Errors.Any())
-            return (objectToReturn == null) ? controller.Ok() : controller.Ok(objectToReturn);
+        {
+            switch (successStatusCode)
+            {
+                case HttpStatusCode.Created: return controller.StatusCode(201);
+                case HttpStatusCode.NoContent: return controller.NoContent();
+                default: return controller.Ok();
+            }
+        }
 
         List<string> errors = res.Errors.ToList();
 
@@ -20,10 +28,37 @@ public static class ControllerExtensions
             return controller.BadRequest(new { Errors = errors });
     }
 
-    public static IActionResult ToActionResult<T>(this ControllerBase controller, ManagerResult<T> res)
+    public static IActionResult ToActionResult<T>(this ControllerBase controller, ManagerResult res, T? objectToReturn = default(T), HttpStatusCode successStatusCode = HttpStatusCode.OK)
     {
         if (res.Errors == null || !res.Errors.Any())
-            return controller.Ok(res.Data);
+        {
+            switch(successStatusCode)
+            {
+                case HttpStatusCode.Created: return (objectToReturn == null) ? controller.StatusCode(201) : controller.StatusCode(201, objectToReturn);
+                case HttpStatusCode.NoContent: return controller.NoContent();
+                default: return (objectToReturn == null) ? controller.Ok() : controller.Ok(objectToReturn);
+            }
+        }
+
+        List<string> errors = res.Errors.ToList();
+
+        if (errors.Contains(ManagerErrors.Unauthorized))
+            return controller.StatusCode(401, new { Errors = errors });
+        else
+            return controller.BadRequest(new { Errors = errors });
+    }
+
+    public static IActionResult ToActionResult<T>(this ControllerBase controller, ManagerResult<T> res, HttpStatusCode successStatusCode = HttpStatusCode.OK)
+    {
+        if (res.Errors == null || !res.Errors.Any())
+        {
+            switch (successStatusCode)
+            {
+                case HttpStatusCode.Created: return controller.StatusCode(201, res.Data);
+                case HttpStatusCode.NoContent: return controller.NoContent();
+                default: return controller.Ok(res.Data);
+            }
+        }
 
         List<string> errors = res.Errors.ToList();
 

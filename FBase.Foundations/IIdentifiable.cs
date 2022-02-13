@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace FBase.Foundations;
 
-namespace FBase.Foundations
+public interface IIdentifiable<out TKey>
 {
-    public interface IIdentifiable<out TKey>
-    {
-        TKey Id { get; }
-    }
+    TKey Id { get; }
 }

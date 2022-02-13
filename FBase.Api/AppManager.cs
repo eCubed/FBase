@@ -39,9 +39,7 @@ public class AppManager<TApp, TUserKey> : ManagerBase<TApp, long>
         var createRes = await DataUtils.CreateAsync(
             entity: app,
             store: GetAppStore(),
-#pragma warning disable CS8621 // Nullability of reference types in return type doesn't match the target delegate (possibly because of nullability attributes).
             findUniqueAsync: FindUniqueAsync);
-#pragma warning restore CS8621 // Nullability of reference types in return type doesn't match the target delegate (possibly because of nullability attributes).
 
         if (!createRes.Success)
             return new ManagerResult<TApp>(createRes.Errors);
@@ -54,9 +52,7 @@ public class AppManager<TApp, TUserKey> : ManagerBase<TApp, long>
         return await DataUtils.UpdateAsync(
             id: id,
             store: GetAppStore(),
-#pragma warning disable CS8621 // Nullability of reference types in return type doesn't match the target delegate (possibly because of nullability attributes).
             findUniqueAsync: FindUniqueAsync,
-#pragma warning restore CS8621 // Nullability of reference types in return type doesn't match the target delegate (possibly because of nullability attributes).
             canUpdate: (app) =>
             {
                 if (!app.UserId.Equals(requestorId))
@@ -86,7 +82,9 @@ public class AppManager<TApp, TUserKey> : ManagerBase<TApp, long>
 
     public List<string> GetScopes(long appId)
     {
-        return GetAppStore().GetQueryableScopes(appId).OrderBy(s => s.Name).Select(s => s.Name).ToList();
+        return GetAppStore().GetQueryableScopes(appId)
+            .OrderBy(s => (s != null) ? s.Name : "")
+            .Select(s => (s != null) ? s.Name : "").ToList();
     }
 
     public bool HasScope(long appId, string scopeName)
@@ -96,14 +94,12 @@ public class AppManager<TApp, TUserKey> : ManagerBase<TApp, long>
 
     public async Task<ManagerResult> AddScopeToAppAsync(string scopeName, long appId)
     {
-        TApp app = await FindByIdAsync(appId);
+        TApp? app = await FindByIdAsync(appId);
 
         if (app == null)
             return new ManagerResult(ManagerErrors.RecordNotFound);
-
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-        IScope scope = GetAppStore().GetQueryableScopes().SingleOrDefault(s => s.Name == scopeName);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+        
+        IScope? scope = GetAppStore().GetQueryableScopes().SingleOrDefault(s => s.Name == scopeName);
 
         if (scope == null)
             return new ManagerResult(ApiMessages.ScopeNotFound);
@@ -115,14 +111,12 @@ public class AppManager<TApp, TUserKey> : ManagerBase<TApp, long>
 
     public async Task<ManagerResult> RemoveScopeFromAppAsync(string scopeName, long appId)
     {
-        TApp app = await FindByIdAsync(appId);
+        TApp? app = await FindByIdAsync(appId);
 
         if (app == null)
             return new ManagerResult(ManagerErrors.RecordNotFound);
 
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-        IScope scope = GetAppStore().GetQueryableScopes(appId).SingleOrDefault(s => s.Name == scopeName);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+        IScope? scope = GetAppStore().GetQueryableScopes(appId).SingleOrDefault(s => (s != null) ? s.Name == scopeName : false);
 
         if (scope == null)
             return new ManagerResult(ApiMessages.ScopeNotInApp);

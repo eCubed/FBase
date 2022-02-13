@@ -15,25 +15,19 @@ public class CredentialSetManager<TCredentialSet, TUserKey> : ManagerBase<TCrede
         return (ICredentialSetStore<TCredentialSet, TUserKey>)Store;
     }
 
-    public async Task<TCredentialSet> FindAsync(string name, long appId)
+    public async Task<TCredentialSet?> FindAsync(string name, long appId)
     {
-#pragma warning disable CS8603 // Possible null reference return.
         return await GetCredentialSetStore().FindAsync(name, appId);
-#pragma warning restore CS8603 // Possible null reference return.
     }
 
-    public async Task<TCredentialSet> FindByClientIdAsync(string clientId)
+    public async Task<TCredentialSet?> FindByClientIdAsync(string clientId)
     {
-#pragma warning disable CS8603 // Possible null reference return.
         return await GetCredentialSetStore().FindByClientIdAsync(clientId);
-#pragma warning restore CS8603 // Possible null reference return.
     }
 
-    private async Task<TCredentialSet> FindUniqueAsync(TCredentialSet match)
+    private async Task<TCredentialSet?> FindUniqueAsync(TCredentialSet match)
     {
-#pragma warning disable CS8603 // Possible null reference return.
-        return await GetCredentialSetStore().FindAsync(match.Name, match.AppId);
-#pragma warning restore CS8603 // Possible null reference return.
+        return await GetCredentialSetStore().FindAsync(match?.Name ?? "", match?.AppId ?? 0);
     }
 
     public List<TCredentialSet> GetCredentialSets(long appId)
@@ -41,16 +35,18 @@ public class CredentialSetManager<TCredentialSet, TUserKey> : ManagerBase<TCrede
         return GetCredentialSetStore().GetQueryableCredentialSets().Where(cs => cs.AppId == appId).OrderBy(cs => cs.Name).ToList();
     }
 
-    public async Task<ManagerResult> CreateAsync(string name, long appId, string redirectUrl, ICredentialValuesProvider credentialValuesProvider = null)
+    public async Task<ManagerResult> CreateAsync(string name, long appId, string redirectUrl, ICredentialValuesProvider? credentialValuesProvider = null)
     {
-        credentialValuesProvider = credentialValuesProvider ?? new DummyCredentialValuesProvider();
+        credentialValuesProvider ??= new DummyCredentialValuesProvider();
 
-        TCredentialSet credentialSet = new TCredentialSet();
-        credentialSet.Name = name;
-        credentialSet.ClientId = credentialValuesProvider.GenerateClientId();
-        credentialSet.ClientSecret = credentialValuesProvider.GenerateClientSecret();
-        credentialSet.RedirectUrl = redirectUrl;
-        credentialSet.AppId = appId;
+        TCredentialSet credentialSet = new()
+        {
+            Name = name,
+            ClientId = credentialValuesProvider.GenerateClientId(),
+            ClientSecret = credentialValuesProvider.GenerateClientSecret(),
+            RedirectUrl = redirectUrl,
+            AppId = appId
+        };
 
         return await DataUtils.CreateAsync(
             entity: credentialSet,
@@ -89,9 +85,9 @@ public class CredentialSetManager<TCredentialSet, TUserKey> : ManagerBase<TCrede
             });
     }
 
-    public async Task<ManagerResult> UpdateAsync(long id, TUserKey requestorId, ICredentialValuesProvider credentialValuesProvider = null)
+    public async Task<ManagerResult> UpdateAsync(long id, TUserKey requestorId, ICredentialValuesProvider? credentialValuesProvider = null)
     {
-        credentialValuesProvider = credentialValuesProvider ?? new DummyCredentialValuesProvider();
+        credentialValuesProvider ??= new DummyCredentialValuesProvider();
 
 
         return await DataUtils.UpdateAsync(

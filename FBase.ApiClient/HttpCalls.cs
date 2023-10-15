@@ -9,8 +9,12 @@ namespace FBase.ApiClient
     {
         #region GET
 
-        public static async Task<HttpResponseMessage> GetAsync(string url, string acceptHeader = null,
-            string bearerToken = null, List<KeyValuePair<string, string>> headers = null)
+        public static async Task<HttpResponseMessage> GetAsync(
+            HttpClient client,
+            string url,
+            string acceptHeader = null,
+            string bearerToken = null,
+            List<KeyValuePair<string, string>> headers = null)
         {
             var builder = new HttpRequestBuilder()
                     .SetMethod(HttpMethod.Get)
@@ -19,24 +23,35 @@ namespace FBase.ApiClient
                     .AddHeaders(headers)
                     .SetBearerToken(bearerToken);
 
-            return await builder.SendAsync();
+            return await builder.SendAsync(client);
         }
 
-        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> GetAsync<TResponseBodyType, TErrorType>(string url, string acceptHeader = null,
-            string bearerToken = null, List<KeyValuePair<string, string>> headers = null)
+        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> GetAsync<TResponseBodyType, TErrorType>(
+            HttpClient client, 
+            string url,
+            string acceptHeader = null,
+            string bearerToken = null,
+            List<KeyValuePair<string, string>> headers = null)
         {
-            var httpResponseMessage = await GetAsync(url, acceptHeader, bearerToken, headers);
+            var httpResponseMessage = await GetAsync(client, url, acceptHeader, bearerToken, headers);
             var response = new TypedHttpResponseMessage<TResponseBodyType, TErrorType>();
             await response.SetAsync(httpResponseMessage);
             return response;
         }
 
-        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> GetAsync<TResponseBodyType, TErrorType>(string url, 
-            string apiKey, string secret, string arbitraryData, IApiClientHasher apiClientHasher, string acceptHeader = null, List<KeyValuePair<string, string>> additionalHeaders = null)
+        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> GetAsync<TResponseBodyType, TErrorType>(
+            HttpClient client,
+            string url, 
+            string apiKey, 
+            string secret,
+            string arbitraryData,
+            IApiClientHasher apiClientHasher,
+            string acceptHeader = null,
+            List<KeyValuePair<string, string>> additionalHeaders = null)
         {
             var apiKeyClientHeaders = Utils.PrepareApiKeyClientCallHeaders(apiKey, secret, arbitraryData, apiClientHasher, additionalHeaders);
 
-            var httpResponseMessage = await GetAsync(url, acceptHeader, headers: apiKeyClientHeaders);
+            var httpResponseMessage = await GetAsync(client, url, acceptHeader, headers: apiKeyClientHeaders);
             var response = new TypedHttpResponseMessage<TResponseBodyType, TErrorType>();
             await response.SetAsync(httpResponseMessage);
             return response;
@@ -45,8 +60,13 @@ namespace FBase.ApiClient
         #endregion
 
         #region POST
-        public static async Task<HttpResponseMessage> PostAsync(string url, HttpContent content, string acceptHeader = null,
-            string bearerToken = null, List<KeyValuePair<string, string>> headers = null)
+        public static async Task<HttpResponseMessage> PostAsync(
+            HttpClient client, 
+            string url,
+            HttpContent content,
+            string acceptHeader = null,
+            string bearerToken = null,
+            List<KeyValuePair<string, string>> headers = null)
         {
             var builder = new HttpRequestBuilder()
                     .SetMethod(HttpMethod.Post)
@@ -56,48 +76,74 @@ namespace FBase.ApiClient
                     .SetBearerToken(bearerToken)
                     .SetContent(content);
 
-            return await builder.SendAsync();
+            return await builder.SendAsync(client);
         }
 
-        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> PostHttpContentAsync<TContentBody, TResponseBodyType, TErrorType>(string url, TContentBody contentBody,
-            string apiKey, string secret, string arbitraryData, IApiClientHasher apiClientHasher, string acceptHeader = null, List<KeyValuePair<string, string>> additionalHeaders = null)
+        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> PostHttpContentAsync<TContentBody, TResponseBodyType, TErrorType>(
+            HttpClient client,
+            string url, 
+            TContentBody contentBody,
+            string apiKey,
+            string secret,
+            string arbitraryData,
+            IApiClientHasher apiClientHasher,
+            string acceptHeader = null,
+            List<KeyValuePair<string, string>> additionalHeaders = null)
             where TContentBody : HttpContent
         {
             var apiKeyClientHeaders = Utils.PrepareApiKeyClientCallHeaders(apiKey, secret, arbitraryData, apiClientHasher, additionalHeaders);
 
-            var httpResponseMessage = await PostAsync(url, contentBody, acceptHeader, headers: apiKeyClientHeaders);
+            var httpResponseMessage = await PostAsync(client, url, contentBody, acceptHeader, headers: apiKeyClientHeaders);
 
             var response = new TypedHttpResponseMessage<TResponseBodyType, TErrorType>();
             await response.SetAsync(httpResponseMessage);
             return response;
         }
 
-        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> PostHttpContentAsync<TContentBody, TResponseBodyType, TErrorType>(string url, TContentBody contentBody, string acceptHeader = null,
-            string bearerToken = null, List<KeyValuePair<string, string>> headers = null)
+        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> PostHttpContentAsync<TContentBody, TResponseBodyType, TErrorType>(
+            HttpClient client,
+            string url, 
+            TContentBody contentBody,
+            string acceptHeader = null,
+            string bearerToken = null,
+            List<KeyValuePair<string, string>> headers = null)
             where TContentBody : HttpContent
         {
-            var httpResponseMessage = await PostAsync(url, contentBody, acceptHeader, bearerToken, headers);
+            var httpResponseMessage = await PostAsync(client, url, contentBody, acceptHeader, bearerToken, headers);
 
             var response = new TypedHttpResponseMessage<TResponseBodyType, TErrorType>();
             await response.SetAsync(httpResponseMessage);
             return response;
         }
 
-        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> PostAsync<TRequestBodyType, TResponseBodyType, TErrorType>(string url, TRequestBodyType body, string acceptHeader = null,
-            string bearerToken = null, List<KeyValuePair<string, string>> headers = null)
+        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> PostAsync<TRequestBodyType, TResponseBodyType, TErrorType>(
+            HttpClient client,
+            string url, 
+            TRequestBodyType body, 
+            string acceptHeader = null,
+            string bearerToken = null, 
+            List<KeyValuePair<string, string>> headers = null)
         {
-            var httpResponseMessage = await PostAsync(url, new JsonContent<TRequestBodyType>(body), acceptHeader, bearerToken, headers);
+            var httpResponseMessage = await PostAsync(client, url, new JsonContent<TRequestBodyType>(body), acceptHeader, bearerToken, headers);
             var response = new TypedHttpResponseMessage<TResponseBodyType, TErrorType>();
             await response.SetAsync(httpResponseMessage);
             return response;
         }
 
-        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> PostAsync<TRequestBodyType, TResponseBodyType, TErrorType>(string url, TRequestBodyType body,
-            string apiKey, string secret, string arbitraryData, IApiClientHasher apiClientHasher, string acceptHeader = null, List<KeyValuePair<string, string>> additionalHeaders = null)
+        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> PostAsync<TRequestBodyType, TResponseBodyType, TErrorType>(
+            HttpClient client, 
+            string url,
+            TRequestBodyType body,
+            string apiKey,
+            string secret,
+            string arbitraryData,
+            IApiClientHasher apiClientHasher,
+            string acceptHeader = null,
+            List<KeyValuePair<string, string>> additionalHeaders = null)
         {
             var apiKeyClientHeaders = Utils.PrepareApiKeyClientCallHeaders(apiKey, secret, arbitraryData, apiClientHasher, additionalHeaders);
 
-            var httpResponseMessage = await PostAsync(url, new JsonContent<TRequestBodyType>(body), acceptHeader, headers: apiKeyClientHeaders);
+            var httpResponseMessage = await PostAsync(client, url, new JsonContent<TRequestBodyType>(body), acceptHeader, headers: apiKeyClientHeaders);
             var response = new TypedHttpResponseMessage<TResponseBodyType, TErrorType>();
             await response.SetAsync(httpResponseMessage);
             return response;
@@ -106,20 +152,31 @@ namespace FBase.ApiClient
         #endregion
 
         #region POST - Upload
-        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> UploadAsync<TResponseBodyType, TErrorType>(string url, string absolutePath, string accessToken = "")
+        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> UploadAsync<TResponseBodyType, TErrorType>(
+            HttpClient client, 
+            string url, 
+            string absolutePath, 
+            string accessToken = "")
         {
-            var httpResponseMessage = await PostAsync(url, new FileContent(absolutePath, "file"), acceptHeader: null, bearerToken: accessToken);
+            var httpResponseMessage = await PostAsync(client, url, new FileContent(absolutePath, "file"), acceptHeader: null, bearerToken: accessToken);
             var response = new TypedHttpResponseMessage<TResponseBodyType, TErrorType>();
             await response.SetAsync(httpResponseMessage);
             return response;
         }
 
-        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> UploadAsync<TResponseBodyType, TErrorType>(string url, string absolutePath, 
-            string apiKey, string secret, string arbitraryData, IApiClientHasher apiClientHasher, List<KeyValuePair<string, string>> additionalHeaders)
+        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> UploadAsync<TResponseBodyType, TErrorType>(
+            HttpClient client,
+            string url,
+            string absolutePath, 
+            string apiKey,
+            string secret,
+            string arbitraryData,
+            IApiClientHasher apiClientHasher,
+            List<KeyValuePair<string, string>> additionalHeaders)
         {
             var apiKeyClientHeaders = Utils.PrepareApiKeyClientCallHeaders(apiKey, secret, arbitraryData, apiClientHasher, additionalHeaders);
 
-            var httpResponseMessage = await PostAsync(url, new FileContent(absolutePath, "file"), headers: apiKeyClientHeaders);
+            var httpResponseMessage = await PostAsync(client, url, new FileContent(absolutePath, "file"), headers: apiKeyClientHeaders);
             var response = new TypedHttpResponseMessage<TResponseBodyType, TErrorType>();
             await response.SetAsync(httpResponseMessage);
             return response;
@@ -129,8 +186,13 @@ namespace FBase.ApiClient
 
         #region PUT
 
-        public static async Task<HttpResponseMessage> PutAsync(string url, HttpContent content, string acceptHeader = null,
-            string bearerToken = null, List<KeyValuePair<string, string>> headers = null)
+        public static async Task<HttpResponseMessage> PutAsync(
+            HttpClient client,
+            string url,
+            HttpContent content,
+            string acceptHeader = null,
+            string bearerToken = null,
+            List<KeyValuePair<string, string>> headers = null)
         {
             var builder = new HttpRequestBuilder()
                     .SetMethod(HttpMethod.Put)
@@ -140,24 +202,37 @@ namespace FBase.ApiClient
                     .SetBearerToken(bearerToken)
                     .SetContent(content);
 
-            return await builder.SendAsync();
+            return await builder.SendAsync(client);
         }
 
-        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> PutAsync<TRequestBodyType, TResponseBodyType, TErrorType>(string url, TRequestBodyType body, string acceptHeader = null,
-            string bearerToken = null, List<KeyValuePair<string, string>> headers = null)
+        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> PutAsync<TRequestBodyType, TResponseBodyType, TErrorType>(
+            HttpClient client,
+            string url, 
+            TRequestBodyType body,
+            string acceptHeader = null,
+            string bearerToken = null,
+            List<KeyValuePair<string, string>> headers = null)
         {
-            var httpResponseMessage = await PutAsync(url, new JsonContent<TRequestBodyType>(body), acceptHeader, bearerToken, headers);
+            var httpResponseMessage = await PutAsync(client,url, new JsonContent<TRequestBodyType>(body), acceptHeader, bearerToken, headers);
             var response = new TypedHttpResponseMessage<TResponseBodyType, TErrorType>();
             await response.SetAsync(httpResponseMessage);
             return response;
         }
 
-        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> PutAsync<TRequestBodyType, TResponseBodyType, TErrorType>(string url, TRequestBodyType body, 
-            string apiKey, string secret, string arbitraryData, IApiClientHasher apiClientHasher, string acceptHeader = null, List<KeyValuePair<string, string>> additionalHeaders = null)
+        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> PutAsync<TRequestBodyType, TResponseBodyType, TErrorType>(
+            HttpClient client,
+            string url, 
+            TRequestBodyType body, 
+            string apiKey,
+            string secret,
+            string arbitraryData,
+            IApiClientHasher apiClientHasher,
+            string acceptHeader = null,
+            List<KeyValuePair<string, string>> additionalHeaders = null)
         {
             var apiKeyClientHeaders = Utils.PrepareApiKeyClientCallHeaders(apiKey, secret, arbitraryData, apiClientHasher, additionalHeaders);
 
-            var httpResponseMessage = await PutAsync(url, new JsonContent<TRequestBodyType>(body), acceptHeader, headers: apiKeyClientHeaders);
+            var httpResponseMessage = await PutAsync(client, url, new JsonContent<TRequestBodyType>(body), acceptHeader, headers: apiKeyClientHeaders);
             var response = new TypedHttpResponseMessage<TResponseBodyType, TErrorType>();
             await response.SetAsync(httpResponseMessage);
             return response;
@@ -167,7 +242,9 @@ namespace FBase.ApiClient
 
         #region DELETE
 
-        public static async Task<HttpResponseMessage> DeleteAsync(string url, string acceptHeader = null,
+        public static async Task<HttpResponseMessage> DeleteAsync(
+            HttpClient client,
+            string url, string acceptHeader = null,
             string bearerToken = null, List<KeyValuePair<string, string>> headers = null)
         {
             var builder = new HttpRequestBuilder()
@@ -177,25 +254,36 @@ namespace FBase.ApiClient
                     .AddHeaders(headers)
                     .SetBearerToken(bearerToken);
 
-            return await builder.SendAsync();
+            return await builder.SendAsync(client);
         }
 
 
-        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> DeleteAsync<TResponseBodyType, TErrorType>(string url, string acceptHeader = null,
-            string bearerToken = null, List<KeyValuePair<string, string>> headers = null)
+        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> DeleteAsync<TResponseBodyType, TErrorType>(
+            HttpClient client,
+            string url, 
+            string acceptHeader = null,
+            string bearerToken = null, 
+            List<KeyValuePair<string, string>> headers = null)
         {
-            var httpResponseMessage = await DeleteAsync(url, acceptHeader, bearerToken, headers);
+            var httpResponseMessage = await DeleteAsync(client,url, acceptHeader, bearerToken, headers);
             var response = new TypedHttpResponseMessage<TResponseBodyType, TErrorType>();
             await response.SetAsync(httpResponseMessage);
             return response;
         }
 
-        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> DeleteAsync<TResponseBodyType, TErrorType>(string url, 
-            string apiKey, string secret, string arbitraryData, IApiClientHasher apiClientHasher, string acceptHeader = null, List<KeyValuePair<string, string>> additionalHeaders = null)
+        public static async Task<TypedHttpResponseMessage<TResponseBodyType, TErrorType>> DeleteAsync<TResponseBodyType, TErrorType>(
+            HttpClient client,
+            string url, 
+            string apiKey,
+            string secret,
+            string arbitraryData,
+            IApiClientHasher apiClientHasher,
+            string acceptHeader = null,
+            List<KeyValuePair<string, string>> additionalHeaders = null)
         {
             var apiKeyClientHeaders = Utils.PrepareApiKeyClientCallHeaders(apiKey, secret, arbitraryData, apiClientHasher, additionalHeaders);
 
-            var httpResponseMessage = await DeleteAsync(url, acceptHeader, headers: apiKeyClientHeaders);
+            var httpResponseMessage = await DeleteAsync(client,url, acceptHeader, headers: apiKeyClientHeaders);
             var response = new TypedHttpResponseMessage<TResponseBodyType, TErrorType>();
             await response.SetAsync(httpResponseMessage);
             return response;

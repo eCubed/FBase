@@ -81,7 +81,7 @@ namespace FBase.ApiClient
         /// depending on the availability of the property values that may have been set.
         /// </summary>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> SendAsync()
+        public async Task<HttpResponseMessage> SendAsync(HttpClient client)
         {
             var request = new HttpRequestMessage { Method = Method, RequestUri = new Uri(this.Url) };
 
@@ -107,10 +107,8 @@ namespace FBase.ApiClient
             if (Content != null)
                 request.Content = Content;
 
-            using (HttpClient client = new HttpClient())
-            {
-                return await client.SendAsync(request);
-            }
+            return await client.SendAsync(request);
+          
         }
     }
 }
